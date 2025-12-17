@@ -1,0 +1,5 @@
+<div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+  <% @items.each do |item| %>
+    <%= render partial: "item", locals: { item: item } %>
+  <% end %>
+</div>

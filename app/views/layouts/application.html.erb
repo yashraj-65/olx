@@ -18,6 +18,25 @@
   </head>
 
   <body>
+  <nav class="navbar" style="background: #232f3e; padding: 1rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+  
+  <div class="nav-logo">
+    <%= link_to "Marketplace", root_path, style: "color: white; font-size: 1.5rem; text-decoration: none; font-weight: bold;" %>
+  </div>
+
+  <div class="nav-links">
+    <%= link_to "All Items", items_path, style: "color: white; margin-right: 15px; text-decoration: none;" %>
+    
+    <%# Using the logic we built earlier for current_user %>
+    <% if current_user %>
+      <span style="margin-right: 15px; color: #aaa;">
+        Hello, <%= current_user.name %>
+      </span>
+      <%= link_to "Sell Item", new_item_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+      <%= link_to "Fav", likes_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
+    <% end %>
+  </div>
+</nav>
     <%= yield %>
   </body>
 </html>

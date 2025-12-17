@@ -1,0 +1,36 @@
+<div class="blog-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; border-radius: 8px; box-shadow: 2px 2px 5px #eee;">
+  <h3><%= item.title %></h3>
+
+  <% if item.image.attached? %>
+    <div class="item-image" style="margin-bottom: 10px;">
+      <%# Using a fixed width for the homepage so cards stay uniform %>
+      <%= image_tag item.image, style: "width: 100%; max-height: 200px; object-fit: cover;" %>
+    </div>
+  <% end %>
+
+  <p><strong>Price:</strong> <span style="color: green; font-weight: bold;"><%= number_to_currency(item.price) %></span></p>
+  <p><strong>Condition:</strong> <%= item.condition.titleize %></p>
+  <p><strong>Description:</strong> <%= truncate(item.desc, length: 100) %></p>
+
+  <p><strong>Categories:</strong> 
+    <%= item.categories.map { |c| c.kind.titleize }.join(", ") %>
+  </p>
+
+  <p><strong>Seller:</strong> <%= item.seller.userable.name %></p>
+
+  <hr>
+  
+  <%# Corrected the link to point to the specific item %>
+  <%= link_to "View Details", item_path(item), class: "view-link" %>
+<% existing_like = item.likes.find_by(buyer: current_user.buyer) %>
+
+<% if existing_like %>
+  <%= button_to "❤️ Unlike", item_like_path(item, existing_like), method: :delete %>
+<% else %>
+  <%= button_to "🤍 Like", item_likes_path(item), method: :post %>
+<% end %>
+<% if current_user.seller && current_user.seller == @item.seller %>
+<%= button_to "delete", item_path(item), method: :delete %>
+<%= button_to "chat with seller"%>
+<% end %>
+</div>

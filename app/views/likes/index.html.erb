@@ -1,0 +1,5 @@
+    <div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    <% @liked_items.each do |item| %>
+        <%= render partial: "items/item", collection: @liked_items, as: :item  %>
+    <% end %>
+    </div>
