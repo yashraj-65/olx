@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_16_125739) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_17_065518) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_16_125739) do
     t.boolean "buyer_marked_done"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "proposer_id", null: false
+    t.bigint "item_id", null: false
+    t.index ["conversation_id"], name: "index_deals_on_conversation_id"
+    t.index ["item_id"], name: "index_deals_on_item_id"
+    t.index ["proposer_id"], name: "index_deals_on_proposer_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -69,17 +75,28 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_16_125739) do
     t.boolean "is_negotiable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "seller_id", null: false
+    t.index ["seller_id"], name: "index_items_on_seller_id"
   end
 
   create_table "likes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "buyer_id", null: false
+    t.string "likeable_type", null: false
+    t.bigint "likeable_id", null: false
+    t.index ["buyer_id"], name: "index_likes_on_buyer_id"
+    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable"
   end
 
   create_table "messages", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -87,6 +104,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_16_125739) do
     t.decimal "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "reviewer_id", null: false
+    t.bigint "seller_id", null: false
+    t.bigint "deal_id", null: false
+    t.index ["deal_id"], name: "index_reviews_on_deal_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
+    t.index ["seller_id"], name: "index_reviews_on_seller_id"
   end
 
   create_table "sellers", force: :cascade do |t|
@@ -109,4 +132,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_16_125739) do
   add_foreign_key "conversations", "buyers"
   add_foreign_key "conversations", "items"
   add_foreign_key "conversations", "sellers"
+  add_foreign_key "deals", "conversations"
+  add_foreign_key "deals", "items"
+  add_foreign_key "deals", "users", column: "proposer_id"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users"
+  add_foreign_key "reviews", "buyers", column: "reviewer_id"
 end
