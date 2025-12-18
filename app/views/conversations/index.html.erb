@@ -1,0 +1,67 @@
+<style>
+  
+  .convo-item {
+    transition: all 0.3s ease; 
+    cursor: pointer;
+  }
+
+  .convo-item:hover {
+    background-color: #ffffff !important;
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+  }
+
+ 
+  .convo-link {
+    text-decoration: none !important;
+    color: #333 !important;
+    display: block;
+    width: 100%;
+    font-weight: 500;
+  }
+
+
+  .convo-item.active-chat {
+    background-color: #ffffff !important;
+    border: 2px solid #b2c6df;
+  }
+
+  
+  .conversations-panel {
+    height: 80vh;
+    overflow-y: auto;
+  }
+</style>
+
+<div class="messenger-container" style="display: flex; font-family: 'Inter', sans-serif;">
+  
+  <div class="conversations-panel" style="width: 30%; border-right: 1px solid #ccc; padding: 10px;">
+    <h3 style="padding-left: 10px;">Your Chats</h3>
+    
+    <% @conversations.each do |convo| %>
+      <%# Check if this convo is the one currently being viewed %>
+      <div class="convo-item <%= 'active-chat' if @conversation == convo %>" 
+           style="background: #e2d9d9ff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 1rem; border-radius: 10px; margin: 10px 5px;">
+        
+        <%= link_to conversation_path(convo), class: "convo-link" do %>
+          <div style="font-size: 1rem;"><%= convo.item.title %></div>
+          <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
+            with <%= convo.seller_profile.userable.name %>
+          </div>
+        <% end %>
+
+      </div>
+    <% end %>
+  </div>
+
+  <div class="chat-window" style="flex-grow: 1; padding: 20px; background-color: white;">
+    <% if @conversation %>
+       <%# Your existing messages loop goes here %>
+    <% else %>
+      <div style="text-align: center; margin-top: 100px; color: #999;">
+        <p>Select a conversation to start chatting.</p>
+      </div>
+    <% end %>
+  </div>
+
+</div>

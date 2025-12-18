@@ -1,36 +1,103 @@
-<div class="blog-card" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; border-radius: 8px; box-shadow: 2px 2px 5px #eee;">
-  <h3><%= item.title %></h3>
+<style>
+  .hero-title {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    color: #222;
+    letter-spacing: -0.5px;
+    margin: 10px 0;
+  }
+
+  .blog-card {
+    margin-top: 10px;
+    border: 2px solid black;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 4px 4px 0px black;
+    transition: all 0.2s ease;
+  }
+
+  .blog-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px black;
+  }
+
+  
+  .button-container form {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .btn-brutal {
+    width: 100%;
+    height: 3em;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid black;
+    background-color: #f0f0f0;
+    box-shadow: 3px 3px 0px black;
+    cursor: pointer;
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-brutal:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px black;
+  }
+
+  .btn-view { background-color: #EADDCA; color: #8a5a32; }
+  .btn-chat { background-color: #0fd850; color: black; }
+  .btn-delete { background-color: #ff5f5f; color: white; }
+  .btn-like { background-color: white; }
+
+  .item-image img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
+  }
+</style>
+
+<div class="blog-card">
+  <h1 class="hero-title"><%= item.title %></h1>
 
   <% if item.image.attached? %>
-    <div class="item-image" style="margin-bottom: 10px;">
-      <%# Using a fixed width for the homepage so cards stay uniform %>
-      <%= image_tag item.image, style: "width: 100%; max-height: 200px; object-fit: cover;" %>
+    <div class="item-image">
+      <%= image_tag item.image %>
     </div>
   <% end %>
 
-  <p><strong>Price:</strong> <span style="color: green; font-weight: bold;"><%= number_to_currency(item.price) %></span></p>
-  <p><strong>Condition:</strong> <%= item.condition.titleize %></p>
-  <p><strong>Description:</strong> <%= truncate(item.desc, length: 100) %></p>
+  <div style="margin: 15px 0; font-size: 14px; line-height: 1.6;">
+    <p><strong>Price:</strong> <span style="color: green; font-weight: bold;"><%= number_to_currency(item.price) %></span></p>
+    <p><strong>Condition:</strong> <%= item.condition.titleize %></p>
+    <p><strong>Description:</strong> <%= truncate(item.desc, length: 80) %></p>
+    <p><strong>Seller:</strong> <%= item.seller.userable.name %></p>
+  </div>
 
-  <p><strong>Categories:</strong> 
-    <%= item.categories.map { |c| c.kind.titleize }.join(", ") %>
-  </p>
-
-  <p><strong>Seller:</strong> <%= item.seller.userable.name %></p>
-
-  <hr>
+  <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
   
-  <%# Corrected the link to point to the specific item %>
-  <%= link_to "View Details", item_path(item), class: "view-link" %>
-<% existing_like = item.likes.find_by(buyer: current_user.buyer) %>
+  <div class="button-container">
+    <%= button_to "View Details", item_path(item), method: :get, class: "btn-brutal btn-view" %>
 
-<% if existing_like %>
-  <%= button_to "❤️ Unlike", item_like_path(item, existing_like), method: :delete %>
-<% else %>
-  <%= button_to "🤍 Like", item_likes_path(item), method: :post %>
-<% end %>
-<% if current_user.seller && current_user.seller == @item.seller %>
-<%= button_to "delete", item_path(item), method: :delete %>
-<%= button_to "chat with seller"%>
-<% end %>
+    <% existing_like = item.likes.find_by(buyer: current_user.buyer) %>
+    <% if existing_like %>
+      <%= button_to "❤️ Unlike", item_like_path(item, existing_like), method: :delete, class: "btn-brutal btn-like" %>
+    <% else %>
+      <%= button_to "🤍 Like", item_likes_path(item), method: :post, class: "btn-brutal btn-like" %>
+    <% end %>
+
+    <% if current_user.seller && current_user.seller == item.seller %>
+      <%= button_to "Delete Item", item_path(item), method: :delete, class: "btn-brutal btn-delete", data: { confirm: "Are you sure?" } %>
+    <% else %>
+      <%= button_to "Chat with Seller", conversations_path(seller_id: item.seller.id, item_id: item.id), method: :post, class: "btn-brutal btn-chat" %>
+    <% end %>
+  </div>
 </div>

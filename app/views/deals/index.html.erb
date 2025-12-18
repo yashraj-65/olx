@@ -1,0 +1,56 @@
+<div class="container" style="padding: 20px; font-family: 'Inter', sans-serif; max-width: 900px; margin: 0 auto;">
+  <h1 class="hero-title" style="text-align: left; font-size: 40px;">My Deals</h1>
+
+  <%# Section: Pending Handshakes %>
+  <section style="margin-bottom: 50px;">
+    <h2 style="border-bottom: 4px solid black; display: inline-block; margin-bottom: 20px;">Pending Action</h2>
+    
+    <% if @pending_deals.any? %>
+      <% @pending_deals.each do |deal| %>
+        <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; background: #fffde7; margin-bottom: 15px;">
+          <div>
+            <h3 style="margin: 0;"><%= deal.item.title %></h3>
+            <p style="margin: 5px 0; font-weight: bold; color: #28a745;">
+              Agreed: <%= number_to_currency(deal.agreed_price) %>
+            </p>
+            <div style="font-size: 12px; margin-top: 10px;">
+              Status: 
+              <span style="padding: 2px 8px; border: 1px solid black; border-radius: 4px; background: white;">
+                <%= deal.buyer_marked_done ? "Buyer Confirmed ✅" : "Waiting for Buyer ⏳" %>
+              </span>
+              <span style="padding: 2px 8px; border: 1px solid black; border-radius: 4px; background: white; margin-left: 5px;">
+                <%= deal.seller_marked_done ? "Seller Confirmed ✅" : "Waiting for Seller ⏳" %>
+              </span>
+            </div>
+          </div>
+          
+          <%= link_to "Finish Deal", conversation_path(deal.conversation), class: "btn-brutal btn-chat", style: "text-decoration: none; width: auto; padding: 10px 20px;" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="color: #666; font-style: italic;">No deals currently waiting for confirmation.</p>
+    <% end %>
+  </section>
+
+  <%# Section: Completed %>
+  <section>
+    <h2 style="border-bottom: 4px solid black; display: inline-block; margin-bottom: 20px; color: #666; border-color: #666;">Completed History</h2>
+    
+    <% if @completed_deals.any? %>
+      <div style="display: grid; gap: 15px;">
+        <% @completed_deals.each do |deal| %>
+          <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; opacity: 0.8; background: #f8f9fa;">
+            <div>
+              <h4 style="margin: 0;"><%= deal.item.title %></h4>
+              <p style="margin: 5px 0;">Sold for: <%= number_to_currency(deal.agreed_price) %></p>
+              <span style="color: #28a745; font-weight: bold; font-size: 13px;">🤝 Completed on <%= deal.updated_at.strftime("%b %d, %Y") %></span>
+            </div>
+            <%= link_to "View Item", item_path(deal.item), class: "btn-brutal", style: "text-decoration: none; width: auto; padding: 8px 15px; background: white;" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="color: #999;">Your completed deal history will appear here.</p>
+    <% end %>
+  </section>
+</div>

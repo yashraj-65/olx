@@ -13,6 +13,13 @@ Rails.application.routes.draw do
     resources :likes, only: [:create, :destroy]
   end
   resources :likes, only: [:index]
+
+  resources :conversations do 
+    resources :messages
+    resources :deals, only: [:create, :update]
+  end
+  resources :deals, only: [:index]
+  
   # Defines the root path route ("/")
   # root "posts#index"
 end
