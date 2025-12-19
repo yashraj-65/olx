@@ -1,7 +1,7 @@
 class ItemsController < ApplicationController
     before_action :ensure_owner, only: [:destroy]
     def index
-        @items = Item.all.order(created_at: :desc)
+        @items = Item.where.not(status: :sold).or(Item.where(status: nil))
     end
     def new
         @item = Item.new

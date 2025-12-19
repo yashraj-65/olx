@@ -1,36 +1,52 @@
+
+<style>
+  /* Modal Container */
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Show modal when the ID is in the URL (e.g., #review-modal-5) */
+.modal-overlay:target {
+  display: flex; !important
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border: 4px solid black; /* Matches your brutalist style */
+  box-shadow: 8px 8px 0px black;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 30px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+</style>
 <div class="container" style="padding: 20px; font-family: 'Inter', sans-serif; max-width: 900px; margin: 0 auto;">
   <h1 class="hero-title" style="text-align: left; font-size: 40px;">My Deals</h1>
 
-  <%# Section: Pending Handshakes %>
-  <section style="margin-bottom: 50px;">
-    <h2 style="border-bottom: 4px solid black; display: inline-block; margin-bottom: 20px;">Pending Action</h2>
-    
-    <% if @pending_deals.any? %>
-      <% @pending_deals.each do |deal| %>
-        <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; background: #fffde7; margin-bottom: 15px;">
-          <div>
-            <h3 style="margin: 0;"><%= deal.item.title %></h3>
-            <p style="margin: 5px 0; font-weight: bold; color: #28a745;">
-              Agreed: <%= number_to_currency(deal.agreed_price) %>
-            </p>
-            <div style="font-size: 12px; margin-top: 10px;">
-              Status: 
-              <span style="padding: 2px 8px; border: 1px solid black; border-radius: 4px; background: white;">
-                <%= deal.buyer_marked_done ? "Buyer Confirmed ✅" : "Waiting for Buyer ⏳" %>
-              </span>
-              <span style="padding: 2px 8px; border: 1px solid black; border-radius: 4px; background: white; margin-left: 5px;">
-                <%= deal.seller_marked_done ? "Seller Confirmed ✅" : "Waiting for Seller ⏳" %>
-              </span>
-            </div>
-          </div>
-          
-          <%= link_to "Finish Deal", conversation_path(deal.conversation), class: "btn-brutal btn-chat", style: "text-decoration: none; width: auto; padding: 10px 20px;" %>
-        </div>
-      <% end %>
-    <% else %>
-      <p style="color: #666; font-style: italic;">No deals currently waiting for confirmation.</p>
-    <% end %>
-  </section>
+  
+<section style="margin-bottom: 50px;">
+  <h2 style="...">Pending Action</h2>
+  <div class="deals-container">
+    <%= render partial: "deal-item", collection: @pending_deals, as: :deal %>
+  </div>
+</section>
+
 
   <%# Section: Completed %>
   <section>
@@ -39,15 +55,46 @@
     <% if @completed_deals.any? %>
       <div style="display: grid; gap: 15px;">
         <% @completed_deals.each do |deal| %>
-          <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; opacity: 0.8; background: #f8f9fa;">
-            <div>
-              <h4 style="margin: 0;"><%= deal.item.title %></h4>
-              <p style="margin: 5px 0;">Sold for: <%= number_to_currency(deal.agreed_price) %></p>
-              <span style="color: #28a745; font-weight: bold; font-size: 13px;">🤝 Completed on <%= deal.updated_at.strftime("%b %d, %Y") %></span>
-            </div>
-            <%= link_to "View Item", item_path(deal.item), class: "btn-brutal", style: "text-decoration: none; width: auto; padding: 8px 15px; background: white;" %>
+  <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 2px solid black; margin-bottom: 10px;">
+    <div>
+      <h4 style="margin: 0;"><%= deal.item.title %></h4>
+      <p style="margin: 5px 0;">Sold for: <%= number_to_currency(deal.agreed_price) %></p>
+      <span style="color: #28a745; font-weight: bold; font-size: 13px;">
+        🤝 Completed on <%= deal.updated_at.strftime("%b %d, %Y") %>
+      </span>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <%# Link to the anchor %>
+      <%= link_to "Review Seller", "#review-modal-#{deal.id}", class: "btn-brutal",data: { turbo: false }, style: "background: #ffde03; padding: 8px 15px; border: 2px solid black; text-decoration: none; font-weight: bold; box-shadow: 4px 4px 0px black;" %>
+      <%= link_to "View Item", item_path(deal.item), class: "btn-brutal", style: "background: white; padding: 8px 15px; border: 2px solid black; text-decoration: none;" %>
+    </div>
+
+    <%# THE MODAL CONTAINER %>
+    <div id="review-modal-<%= deal.id %>" class="modal-overlay">
+      <div class="modal-content">
+        <%# Closing this sends the user back to the plain index page %>
+        <%= link_to "×", deals_path, class: "close-modal" %>
+        
+        <h3 style="margin-top: 0;">Rate <%= deal.item.seller.userable.name %></h3>
+        
+        <%= form_with(model: Review.new, url: create_review_deal_path(deal), method: :post, local: true) do |f| %>
+          <div style="margin-bottom: 15px;">
+            <%= f.label :rating, "Rating (1-5)", style: "font-weight: bold;" %><br>
+            <%= f.number_field :rating, in: 1..5, style: "width: 100%; padding: 8px; border: 2px solid black;", required: true %>
           </div>
+
+          <div style="margin-bottom: 20px;">
+            <%= f.label :comment, "Your Feedback", style: "font-weight: bold;" %><br>
+            <%= f.text_area :comment, rows: 3, style: "width: 100%; padding: 8px; border: 2px solid black;", required: true %>
+          </div>
+
+          <%= f.submit "Post Review", style: "background: black; color: white; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; border: none;" %>
         <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
       </div>
     <% else %>
       <p style="color: #999;">Your completed deal history will appear here.</p>

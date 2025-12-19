@@ -18,7 +18,12 @@ Rails.application.routes.draw do
     resources :messages
     resources :deals, only: [:create, :update]
   end
-  resources :deals, only: [:index]
+  resources :deals do
+    member do
+      post :create_review, to:'reviews/#create_review'
+    end
+    resources :reviews
+  end
   
   # Defines the root path route ("/")
   # root "posts#index"

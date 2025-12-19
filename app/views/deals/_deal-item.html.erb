@@ -1,0 +1,125 @@
+<style>
+.card {
+  width: 220px; /* Slightly wider for better proportions */
+  height: 320px; /* Taller to fit the image comfortably */
+  border-radius: 15px;
+  background: #fff;
+  position: relative;
+  padding: 0; /* Remove padding here so image hits the edges */
+  border: 2px solid #e0e0e0;
+  transition: 0.4s ease-out;
+  overflow: hidden; /* Clips the image corners to the card radius */
+  display: flex;
+  flex-direction: column;
+}
+
+.card-img {
+  width: 100%;
+  height: 140px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* This makes the image look professional */
+  transition: transform 0.5s;
+}
+
+.card-details {
+  padding: 1rem;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.text-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Prevents long titles from breaking the card */
+}
+
+.text-price {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.text-users {
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: auto; 
+  line-height: 1.2;
+}
+
+.card-button {
+  transform: translate(-50%, 125%);
+  width: 80%;
+  border-radius: 8px;
+  border: none;
+  background-color: #000; 
+  color: #fff;
+  font-size: 0.9rem;
+  padding: .6rem;
+  position: absolute;
+  left: 50%;
+  bottom: 15px;
+  opacity: 0;
+  transition: 0.3s ease-out;
+  text-decoration: none;
+  text-align: center;
+}
+
+.card:hover {
+  border-color: #000;
+  box-shadow: 8px 8px 0px 0px rgba(0, 0, 0, 1); /* Neo-brutalism style shadow */
+  transform: translateY(-5px);
+}
+
+.card:hover .card-img img {
+  transform: scale(1.1);
+}
+
+.card:hover .card-button {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+</style>  
+
+<div class="card">
+  <div class="card-img">
+    <% if deal.item.image.attached? %>
+      <%= image_tag deal.item.image %>
+    <% else %>
+      <span style="color: #ccc;">No Image</span>
+    <% end %>
+  </div>
+
+  <div class="card-details">
+    <p class="text-title"><%= deal.item.title %></p>
+    <p class="text-price"><%= number_to_currency(deal.agreed_price) %></p>
+    <%= button_to "Close deal", deal_path(deal), method: :patch%>
+    <div class="text-users">
+      <div>Seller: <strong><%= deal.conversation.seller_profile.userable.name %><%= deal.seller_marked_done ? " ✅" : "⏳" %>   </strong></div>
+      <div>Buyer: <strong><%= deal.conversation.buyer_profile.userable.name %>  <%= deal.buyer_marked_done ? " ✅" : "⏳" %></strong></div>
+    </div>
+  </div>
+
+  <%= link_to "View Deal", item_path(deal.item), class: "card-button" %>
+</div>
+
+
+
+              
+
+
+ 
