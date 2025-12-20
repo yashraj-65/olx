@@ -9,11 +9,12 @@ class User < ApplicationRecord
     has_many :deals_as_seller, through: :seller, source: :deals
     
      validates :name, presence: true, length: {minimum: 3}
-     
+     after_create :create_default_profiles
     private
    
-    def create_default_buyer
+  def create_default_profiles
         self.create_buyer
+        self.create_seller
     end
 
 end

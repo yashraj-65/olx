@@ -79,7 +79,7 @@
     <p><strong>Price:</strong> <span style="color: green; font-weight: bold;"><%= number_to_currency(item.price) %></span></p>
     <p><strong>Condition:</strong> <%= item.condition.titleize %></p>
     <p><strong>Description:</strong> <%= truncate(item.desc, length: 80) %></p>
-    <p><strong>Seller:</strong> <%= item.seller.userable.name %></p>
+    <p><strong>Seller:</strong> <%= link_to item.seller.userable.name, seller_path(item.seller) %></p>
   </div>
 
   <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">

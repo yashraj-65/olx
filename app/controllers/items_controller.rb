@@ -20,7 +20,7 @@ class ItemsController < ApplicationController
             @categories = Category.all
             render :new
         end
-        end
+    end
     def destroy
         seller = current_user.seller || current_user.create_seller
         @item = seller.items.find(params[:id])
@@ -40,7 +40,6 @@ private
                  redirect_to items_path, alert: "You are not authorized to delete this item."
             end
         end
-
         
 end
 

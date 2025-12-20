@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   root "items#index"
   resources :items, only: [:new, :create, :show, :index, :destroy] do
-    resources :likes, only: [:create, :destroy]
+    resources :likes  
   end
   resources :likes, only: [:index]
 
@@ -18,12 +18,21 @@ Rails.application.routes.draw do
     resources :messages
     resources :deals, only: [:create, :update]
   end
-  resources :deals do
-    member do
-      post :create_review, to:'reviews/#create_review'
-    end
-    resources :reviews
+  resources :reviews do
+  member do
+  post 'like_review', to: 'likes#like_review'
   end
+end
+resources :deals do
+  resources :reviews do
+    collection do
+      post 'create_review'
+    end
+  end
+end 
+resources :sellers
+resources :likes
+
   
   # Defines the root path route ("/")
   # root "posts#index"

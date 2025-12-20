@@ -18,24 +18,33 @@
   </head>
 
   <body>
-  <nav class="navbar" style="background: #232f3e; padding: 1rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+ <nav class="navbar" style="background: #131921; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
   
-  <div class="nav-logo">
-    <%= link_to "Marketplace", root_path, style: "color: white; font-size: 1.5rem; text-decoration: none; font-weight: bold;" %>
+  <div class="nav-left" style="display: flex; align-items: center; gap: 20px;">
+    <%= link_to "MARKETPLACE", root_path, style: "color: white; font-size: 1.4rem; text-decoration: none; font-weight: 900; letter-spacing: -1px;" %>
+    <%= link_to "All Items", items_path, style: "color: #ccc; text-decoration: none; font-size: 0.9rem; font-weight: 500;" %>
   </div>
 
-  <div class="nav-links">
-    <%= link_to "All Items", items_path, style: "color: white; margin-right: 15px; text-decoration: none;" %>
-    
-    <%# Using the logic we built earlier for current_user %>
+  <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
     <% if current_user %>
-      <span style="margin-right: 15px; color: #aaa;">
-        Hello, <%= current_user.name %>
-      </span>
-      <%= link_to "Sell Item", new_item_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
-      <%= link_to "Fav", likes_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
-      <%= link_to "Chat", conversations_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;" %>
-      <%= link_to "My Deals", deals_path, style: "background: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;"%>
+      <%# Secondary Icons/Links %>
+      <div class="user-tools" style="display: flex; gap: 12px; margin-right: 10px; border-right: 1px solid #3a4553; padding-right: 15px;">
+        <%= link_to "❤ Favs", likes_path, title: "Favorites", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
+        <%= link_to "💬 Chat", conversations_path, title: "Messages", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
+        <%= link_to "📦 Deals", deals_path, title: "My Deals", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
+      </div>
+
+      <%# Profile Link %>
+      <%= link_to seller_path(current_user.seller), style: "color: white; text-decoration: none; display: flex; flex-direction: column;" do %>
+        <span style="font-size: 0.7rem; color: #aaa;">Hello, <%= current_user.name.split.first %></span>
+        <span style="font-size: 0.9rem; font-weight: bold;">Account & Profile</span>
+      <% end %>
+
+      <%# Primary Action Button %>
+      <%= link_to "SELL ITEM", new_item_path, style: "background: #febd69; color: #111; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 800; font-size: 0.85rem; border: 1px solid #a88734; transition: 0.2s;" %>
+      
+    <% else %>
+      <%= link_to "Sign In", new_user_session_path, style: "color: white; text-decoration: none; font-weight: bold;" %>
     <% end %>
   </div>
 </nav>
