@@ -1,0 +1,117 @@
+<style>
+  /* Minimal but bold wrapper */
+  .minimal-form { max-width: 500px; margin: 0 auto; }
+  
+  .input-wrapper {
+    position: relative;
+    margin-bottom: -3px; /* Overlaps borders for a "stacked" look */
+  }
+
+  .brutal-field {
+    width: 100%;
+    border: 3px solid black;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: monospace;
+    background: white;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  /* Focus effect: change color instead of moving */
+  .brutal-field:focus {
+    background: #ffff00; /* Neon yellow highlight */
+    z-index: 10;
+  }
+
+  /* Minimal Category Grid */
+  .cat-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 0;
+  }
+
+  .cat-tag {
+    border: 2px solid black;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: white;
+  }
+
+  .cat-tag input:checked + span {
+    background: black;
+    color: white;
+  }
+
+  .btn-submit-minimal {
+    width: 100%;
+    background: black;
+    color: white;
+    border: none;
+    padding: 20px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 20px;
+    text-transform: uppercase;
+  }
+
+  .btn-submit-minimal:hover { background: #0fd850; color: black; }
+</style>
+
+<div class="minimal-form">
+  <%= form_with(model: item, local: true) do |f| %>
+    
+    <%# Simple error line if something fails %>
+    <% if item.errors.any? %>
+      <div style="color: red; font-weight: 800; margin-bottom: 10px;">
+        ! <%= item.errors.full_messages.first %>
+      </div>
+    <% end %>
+
+    <div class="input-wrapper">
+      <%= f.text_field :title, placeholder: "ITEM TITLE", class: "brutal-field" %>
+    </div>
+
+    <div class="input-wrapper">
+      <%= f.number_field :price, step: 0.01, placeholder: "PRICE (0.00)", class: "brutal-field" %>
+    </div>
+
+    <div class="cat-grid">
+      <%= f.collection_check_boxes :category_ids, Category.all, :id, :kind do |b| %>
+        <label class="cat-tag">
+          <%= b.check_box(style: "display: none;") %>
+          <span><%= b.text.upcase %></span>
+        </label>
+      <% end %>
+    </div>
+    <div class="input-wrapper" style="border: 3px solid black; padding: 15px; background: white;">
+  <label class="brutal-label" style="margin-bottom: 10px; display: block;">Current Image</label>
+  
+  <% if item.image.attached? %>
+    <div style="margin-bottom: 15px; border: 2px solid black; width: fit-content;">
+      <%= image_tag item.image, style: "width: 100px; height: 100px; object-fit: cover; display: block;" %>
+    </div>
+  <% else %>
+    <p style="font-size: 0.7rem; color: #888; margin-bottom: 10px;">NO IMAGE ATTACHED</p>
+  <% end %>
+
+  <%= f.label :image, "UPLOAD NEW PHOTO", class: "back-nav", style: "cursor: pointer; background: #eee; border: 2px solid black; width: fit-content;" %>
+  <%= f.file_field :image, class: "brutal-field", style: "display: none;", onchange: "this.previousElementSibling.innerText = 'FILE SELECTED!'" %>
+</div>
+    <div class="input-wrapper">
+      <%= f.text_area :desc, placeholder: "DESCRIPTION...", rows: 3, class: "brutal-field" %>
+    </div>
+
+    <div class="input-wrapper">
+      <%= f.text_field :warranty, placeholder: "WARRANTY INFO", class: "brutal-field" %>
+    </div>
+
+    <%= f.submit "UPDATE", class: "btn-submit-minimal" %>
+    
+  <% end %>
+</div>

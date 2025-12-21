@@ -1,106 +1,174 @@
-
 <style>
-  /* Modal Container */
-.modal-overlay {
-  display: none; /* Hidden by default */
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-}
+  /* 1. Modal Logic Fix */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9); /* Darker for focus */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+  }
 
-/* Show modal when the ID is in the URL (e.g., #review-modal-5) */
-.modal-overlay:target {
-  display: flex; !important
-}
+  .modal-overlay:target {
+    display: flex !important;
+  }
 
-.modal-content {
-  background: white;
-  padding: 30px;
-  border: 4px solid black; /* Matches your brutalist style */
-  box-shadow: 8px 8px 0px black;
-  width: 90%;
-  max-width: 400px;
-  position: relative;
-}
+  /* 2. Brutalist Card Components */
+  .deal-card {
+    background: white;
+    border: 3px solid black;
+    box-shadow: 6px 6px 0px black;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.1s;
+  }
 
-.close-modal {
-  position: absolute;
-  top: 10px; right: 15px;
-  font-size: 30px;
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-}
+  .deal-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0px black;
+  }
+
+  .deal-info h4 {
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: -1px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #0fd850;
+    color: black;
+    border: 2px solid black;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 40px;
+    border: 4px solid black;
+    box-shadow: 15px 15px 0px #ffde03; /* Yellow shadow for pop */
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+  }
+
+  .btn-brutal-small {
+    text-decoration: none;
+    color: black;
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 10px 15px;
+    border: 2px solid black;
+    box-shadow: 3px 3px 0px black;
+    text-transform: uppercase;
+    background: white;
+  }
+
+  .btn-brutal-small:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px black;
+  }
 </style>
-<div class="container" style="padding: 20px; font-family: 'Inter', sans-serif; max-width: 900px; margin: 0 auto;">
-  <h1 class="hero-title" style="text-align: left; font-size: 40px;">My Deals</h1>
 
+<div class="container" style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
   
-<section style="margin-bottom: 50px;">
-  <h2 style="...">Pending Action</h2>
-  <div class="deals-container">
-    <%= render partial: "deal-item", collection: @pending_deals, as: :deal %>
-  </div>
-</section>
+  <h1 style="font-size: 4rem; font-weight: 900; text-transform: uppercase; letter-spacing: -3px; margin-bottom: 40px;">
+    MY<br>DEALS
+  </h1>
 
+  <%# SECTION: PENDING %>
+  <section style="margin-bottom: 60px;">
+    <h2 style="background: black; color: white; display: inline-block; padding: 5px 15px; text-transform: uppercase; font-size: 1.2rem; margin-bottom: 20px;">
+      Pending Actions
+    </h2>
+    <div class="deals-container">
+      <%= render partial: "deal-item", collection: @pending_deals, as: :deal %>
+    </div>
+  </section>
 
-  <%# Section: Completed %>
+  <%# SECTION: COMPLETED %>
   <section>
-    <h2 style="border-bottom: 4px solid black; display: inline-block; margin-bottom: 20px; color: #666; border-color: #666;">Completed History</h2>
+    <h2 style="border-bottom: 8px solid #eee; display: block; padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; margin-bottom: 20px; color: #888;">
+      Completed History
+    </h2>
     
     <% if @completed_deals.any? %>
-      <div style="display: grid; gap: 15px;">
+      <div>
         <% @completed_deals.each do |deal| %>
-  <div class="blog-card" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 2px solid black; margin-bottom: 10px;">
-    <div>
-      <h4 style="margin: 0;"><%= deal.item.title %></h4>
-      <p style="margin: 5px 0;">Sold for: <%= number_to_currency(deal.agreed_price) %></p>
-      <span style="color: #28a745; font-weight: bold; font-size: 13px;">
-        🤝 Completed on <%= deal.updated_at.strftime("%b %d, %Y") %>
-      </span>
-    </div>
+          <div class="deal-card">
+            
+            <div class="deal-info">
+              <h4><%= deal.item.title %></h4>
+              <p style="font-family: monospace; font-weight: bold; margin: 5px 0;">
+                PRICE: <%= number_to_currency(deal.agreed_price) %>
+              </p>
+              <div class="status-badge">
+                DONE: <%= deal.updated_at.strftime("%b %d, %Y") %>
+              </div>
+            </div>
 
-    <div style="display: flex; gap: 10px;">
-      <%# Link to the anchor %>
-       <% unless current_user.seller==deal.conversation.seller_profile %>
-      <%= link_to "Review Seller", "#review-modal-#{deal.id}", class: "btn-brutal",data: { turbo: false }, style: "background: #ffde03; padding: 8px 15px; border: 2px solid black; text-decoration: none; font-weight: bold; box-shadow: 4px 4px 0px black;" %>
-      <%end%>
-      <%= link_to "View Item", item_path(deal.item), class: "btn-brutal", style: "background: white; padding: 8px 15px; border: 2px solid black; text-decoration: none;" %>
-    </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+              <div style="font-size: 0.7rem; font-weight: 900; color: #aaa;">PARTNER: <%= deal.item.seller.userable.name.upcase %></div>
+              
+              <div style="display: flex; gap: 10px;">
+                <%# VIEW LINK %>
+                <%= link_to "VIEW ITEM", item_path(deal.item), class: "btn-brutal-small" %>
 
-    <%# THE MODAL CONTAINER %>
-    <div id="review-modal-<%= deal.id %>" class="modal-overlay">
-      <div class="modal-content">
-        <%# Closing this sends the user back to the plain index page %>
-        <%= link_to "×", deals_path, class: "close-modal" %>
-        
-        <h3 style="margin-top: 0;">Rate <%= deal.item.seller.userable.name %></h3>
-        
-        <%= form_with(model: Review.new, url: create_review_deal_reviews_path(deal), method: :post, local: true) do |f| %>
-          <div style="margin-bottom: 15px;">
-            <%= f.label :rating, "Rating (1-5)", style: "font-weight: bold;" %><br>
-            <%= f.number_field :rating, in: 1..5, style: "width: 100%; padding: 8px; border: 2px solid black;", required: true %>
+                <%# SELLER PROFILE LINK %>
+                <%= link_to "PROFILE", seller_path(deal.item.seller), class: "btn-brutal-small", style: "background: #eee;" %>
+
+                <%# REVIEW TRIGGER %>
+                <% unless current_user.seller == deal.item.seller %>
+                  <%= link_to "RATE SELLER", "#review-modal-#{deal.id}", 
+                              class: "btn-brutal-small", 
+                              data: { turbo: false }, 
+                              style: "background: #ffde03;" %>
+                <% end %>
+              </div>
+            </div>
+
+            <%# THE MODAL %>
+            <div id="review-modal-<%= deal.id %>" class="modal-overlay">
+              <div class="modal-content">
+                <%= link_to "×", deals_path, class: "close-modal", style: "font-size: 2rem; top: 5px;" %>
+                
+                <h3 style="font-weight: 900; text-transform: uppercase; margin-top: 0;">Leave Feedback</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 20px;">How was your experience with <strong><%= deal.item.seller.userable.name %></strong>?</p>
+                
+                <%= form_with(model: Review.new, url: create_review_deal_reviews_path(deal), method: :post, local: true) do |f| %>
+                  <div style="margin-bottom: 15px;">
+                    <%= f.label :rating, "RATING (1-5)", style: "font-weight: 900; font-size: 0.8rem;" %>
+                    <%= f.number_field :rating, in: 1..5, class: "brutal-input", style: "width: 100%; border: 3px solid black; padding: 10px; font-weight: bold;", required: true %>
+                  </div>
+
+                  <div style="margin-bottom: 20px;">
+                    <%= f.label :comment, "COMMENTS", style: "font-weight: 900; font-size: 0.8rem;" %>
+                    <%= f.text_area :comment, rows: 3, class: "brutal-input", style: "width: 100%; border: 3px solid black; padding: 10px; font-weight: bold;", required: true %>
+                  </div>
+             
+                  <%= f.submit "SUBMIT REVIEW", style: "background: black; color: white; padding: 15px; width: 100%; font-weight: 900; cursor: pointer; border: none; text-transform: uppercase;" %>
+                <% end %>
+              </div>
+            </div>
+
           </div>
-
-          <div style="margin-bottom: 20px;">
-            <%= f.label :comment, "Your Feedback", style: "font-weight: bold;" %><br>
-            <%= f.text_area :comment, rows: 3, style: "width: 100%; padding: 8px; border: 2px solid black;", required: true %>
-          </div>
-     
-      <%= f.submit "Post Review", style: "background: black; color: white; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; border: none;" %>
-      
         <% end %>
       </div>
-    </div>
-  </div>
-<% end %>
-      </div>
     <% else %>
-      <p style="color: #999;">Your completed deal history will appear here.</p>
+      <div style="border: 3px dashed #ccc; padding: 40px; text-align: center; color: #aaa; font-weight: bold;">
+        NO COMPLETED DEALS YET
+      </div>
     <% end %>
   </section>
 </div>

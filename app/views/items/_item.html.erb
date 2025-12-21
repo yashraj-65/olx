@@ -96,6 +96,7 @@
 
     <% if current_user.seller && current_user.seller == item.seller %>
       <%= button_to "Delete Item", item_path(item), method: :delete, class: "btn-brutal btn-delete", data: { confirm: "Are you sure?" } %>
+      <%= link_to "Edit Item", edit_item_path(item), class: "btn-brutal", style: "background-color: #ffde03; text-decoration: none;" %>
     <% else %>
       <%= button_to "Chat with Seller", conversations_path(seller_id: item.seller.id, item_id: item.id), method: :post, class: "btn-brutal btn-chat" %>
     <% end %>

@@ -30,6 +30,23 @@ class ItemsController < ApplicationController
             redirect_to items_path, alert: "Failed to delete item."
         end
     end
+
+    def edit
+        seller = current_user.seller || current_user.create_seller
+        @item=seller.items.find(params[:id])
+        @categories = Category.all
+    end
+    def update
+        seller = current_user.seller || current_user.create_seller
+        @item = seller.items.find(params[:id])
+        if @item.update(item_params)
+            redirect_to item_path(@item)
+        else
+            @categories=Category.all
+            render :edit, status: :unprocessable_entity
+        end
+
+    end
 private
         def item_params
             params.require(:item).permit(:title, :desc, :status, :warranty, :color, :price, :condition, :is_negotiable, :image, category_ids: [])

@@ -1,0 +1,72 @@
+<style>
+  .edit-page-container {
+    max-width: 550px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  /* Bold, blocky header with an underline offset */
+  .hero-title-minimal {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    margin-bottom: 30px;
+    line-height: 0.9;
+    border-left: 10px solid black;
+    padding-left: 15px;
+  }
+
+  /* The outer wrapper for the form partial */
+  .form-canvas {
+    background: white;
+    border: 4px solid black;
+    box-shadow: 12px 12px 0px 0px rgba(0,0,0,1);
+    padding: 10px; /* Slight padding so the shared-border form looks nested */
+    margin-bottom: 30px;
+  }
+
+  /* Utility link styling */
+  .back-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: black;
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .back-nav:hover {
+    border-color: black;
+    background: #ffff00;
+  }
+</style>
+
+<div class="edit-page-container">
+  
+  <header>
+    <h1 class="hero-title-minimal">
+      Edit<br>Item
+    </h1>
+  </header>
+
+  <div class="form-canvas">
+    <%= render "form", item: @item %>
+  </div>
+
+  <nav style="display: flex; justify-content: space-between; align-items: center;">
+    <%= link_to item_path(@item), class: "back-nav" do %>
+      ← CANCEL & RETURN
+    <% end %>
+    
+    <span style="font-family: monospace; font-weight: bold; font-size: 0.7rem; color: #888;">
+      ID: #<%= @item.id %>
+    </span>
+  </nav>
+
+</div>
