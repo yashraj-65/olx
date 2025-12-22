@@ -6,7 +6,7 @@ class ConversationsController < ApplicationController
         seller_id=params[:seller_id]
         item_id=params[:item_id]
         @conversation = Conversation.where(buyer_id: buyer_id, seller_id: seller_id, item_id: item_id).first_or_create
-       # raise @conversation.errors.full_messages.inspect
+      
 
         redirect_to conversation_path(@conversation)
     end

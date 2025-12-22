@@ -13,6 +13,13 @@ class DealsController < ApplicationController
                                .where.not(id: @completed_deals.pluck(:id))
                                .where("items.status != ? OR items.status IS NULL", 2)
     end
+
+def destroy
+  @deal = Deal.find(params[:id])
+  @deal.destroy
+  
+  redirect_to deals_path, notice: "Deal was successfully deleted."
+end
     def create
         @conversation = Conversation.find(params[:conversation_id])
         @item = @conversation.item
@@ -33,11 +40,10 @@ class DealsController < ApplicationController
         end
     end
 
-# app/controllers/deals_controller.rb
+
 def update
   @deal = Deal.find(params[:id])
   
-  # Log this to your terminal to debug
   puts "DEBUG: Current User ID: #{current_user.id}"
   puts "DEBUG: Seller ID in Deal: #{@deal.conversation.seller_id}"
   puts "DEBUG: Buyer ID in Deal: #{@deal.conversation.buyer_id}"

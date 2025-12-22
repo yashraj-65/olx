@@ -1,5 +1,4 @@
-    <div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-    <% @liked_items.each do |item| %>
-        <%= render partial: "items/item", collection: @liked_items, as: :item  %>
-    <% end %>
-    </div>
+<div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+  <%# Rails loops through @liked_items for you here %>
+  <%= render partial: "items/item", collection: @liked_items, as: :item %>
+</div>

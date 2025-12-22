@@ -10,6 +10,7 @@
             elsif @like.save
                 redirect_back fallback_location: root_path, notice: "likes!"
             else
+
                 redirect_back fallback_location: root_path, notice: "likes!"
             end
         end

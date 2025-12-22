@@ -1,0 +1,141 @@
+.tab-radio { display: none; }
+
+.industrial-nav {
+  display: flex;
+  border: 3px solid black;
+  background: white;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 30px auto;
+  justify-content: space-between;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s;
+  border-right: 3px solid black;
+  letter-spacing: 1px;
+}
+
+.nav-item:last-child { border-right: none; }
+.nav-item:hover { background: #f4f4f4; }
+
+#tab-reviews:checked ~ .industrial-nav label[for="tab-reviews"],
+#tab-active:checked ~ .industrial-nav label[for="tab-active"],
+#tab-sold:checked ~ .industrial-nav label[for="tab-sold"],
+#tab-bought:checked ~ .industrial-nav label[for="tab-bought"] {
+  background: black;
+  color: white;
+}
+
+.tab-content { display: none; padding: 20px 0; }
+#tab-reviews:checked ~ #reviews-section,
+#tab-active:checked ~ #active-section,
+#tab-sold:checked ~ #sold-section,
+#tab-bought:checked ~ #bought-section { display: block; }
+
+/* ---------- Profile Containers ---------- */
+.container.profile-page {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ---------- Reviews ---------- */
+.reviews-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.review-card {
+  flex: 0 1 300px;
+  border: 3px solid black;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 8px 8px 0 rgba(0,0,0,1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.review-rating {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #f39c12;
+}
+
+.review-likes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 1.2em;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.like-btn.liked span { color: #e74c3c; }
+
+.review-comment {
+  margin: 10px 0;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.review-footer {
+  font-size: 0.85em;
+  border-top: 2px solid #eee;
+  padding-top: 12px;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- Items ---------- */
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* ---------- Empty text ---------- */
+.empty-text {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  font-weight: 600;
+  margin: 50px 0;
+}

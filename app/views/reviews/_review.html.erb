@@ -1,0 +1,44 @@
+<div class="review-card">
+  <div class="review-content">
+    <div class="review-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <span class="review-rating">
+        <% review.rating.to_i.times do %>★<% end %>
+        (<%= review.rating %>)
+      </span>
+      
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <%# --- LIKE LOGIC --- %>
+        <div class="review-likes">
+          <% existing_like = review.likes.find_by(buyer: current_user.buyer) %>
+          <% if existing_like %>
+            <%= button_to like_path(existing_like), method: :delete, class: "like-btn liked" do %>
+              ❤️ <small><%= review.likes.count %></small>
+            <% end %>
+          <% else %>
+            <%= button_to like_review_review_path(review), method: :post, class: "like-btn" do %>
+              🤍 <small><%= review.likes.count %></small>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# --- DELETE LOGIC (NEW) --- %>
+        <% if review.reviewer == current_user.buyer %>
+          <%= button_to review_path(review), 
+                       method: :delete, 
+                     
+                       class: "like-btn", 
+                       style: "border: 1px solid #ff4d4d; color: #ff4d4d; background: none; cursor: pointer; padding: 2px 5px;" do %>
+            <small>DELETE</small>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <p class="review-comment">"<%= review.comment %>"</p>
+  </div>
+
+  <div class="review-footer">
+    <strong><%= review.reviewer.userable.name %></strong>
+    <div class="review-date"><%= review.created_at.strftime("%b %d, %Y") %></div>
+  </div>
+</div>

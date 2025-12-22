@@ -1,69 +1,64 @@
-<div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 30px;">
-  
-  <h2 style="border-bottom: 2px solid black; padding-bottom: 10px; width: fit-content; margin-bottom: 20px;">
-    Customer Reviews
-  </h2>
+<div class="container profile-page">
+  <h1 class="main-title"><%= @user.name %>'s Profile</h1>
 
+  <!-- Hidden radios for tab switching -->
+  <input type="radio" name="profile_tab" id="tab-reviews" class="tab-radio" checked>
+  <input type="radio" name="profile_tab" id="tab-active" class="tab-radio">
+  <input type="radio" name="profile_tab" id="tab-sold" class="tab-radio">
+  <input type="radio" name="profile_tab" id="tab-bought" class="tab-radio">
+
+  <!-- Tab Navigation -->
+  <div class="industrial-nav">
+    <label for="tab-reviews" class="nav-item">Reviews (<%= @reviews.count %>)</label>
+    <label for="tab-active" class="nav-item">Active Listings (<%= @active_listings.count %>)</label>
+  <%if @user==current_user%>
+    <label for="tab-sold" class="nav-item">Sold Items (<%= @sold_items.count %>)</label>
+    <label for="tab-bought" class="nav-item">Bought Items (<%= @bought_items.count %>)</label>
+    <%end%>
+  </div>
+
+  <!-- Reviews Section -->
+  <div id="reviews-section" class="tab-content reviews-section">
   <% if @reviews.any? %>
-    <div class="reviews-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; width: 90%; max-width: 1200px;">
-      
-      <% @reviews.each do |review| %>
-        <div class="review-card" style="flex: 0 1 300px; border: 3px solid black; padding: 20px; background: #fff; box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); display: flex; flex-direction: column; justify-content: space-between; min-height: 200px;">
-          
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-weight: bold; font-size: 1.1em; color: #f39c12;">
-                <% review.rating.to_i.times do %>★<% end %>
-                <span style="color: black;">(<%= review.rating %>)</span>
-              </span>
-<div class="review-likes">
-  <% existing_like = review.likes.find_by(buyer: current_user.buyer) %>
-
-  <% if existing_like %>
-    <%= button_to like_path(existing_like),
-                  method: :delete,
-                  style: "background: none; border: none; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; gap: 5px;" do %>
-      <span style="color: #e74c3c;">❤️</span>
-      <small style="font-weight: bold; color: black;"><%= review.likes.count %></small>
-    <% end %>
-  <% else %>
-    <%= button_to like_review_review_path(review),
-                  method: :post,
-                  style: "background: none; border: none; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; gap: 5px;" do %>
-      <span style="color: #ccc;">🤍</span>
-      <small style="font-weight: bold; color: black;"><%= review.likes.count %></small>
-    <% end %>
-  <% end %>
-</div>
-            </div>
-
-            <p style="margin: 10px 0; line-height: 1.6; font-style: italic; font-size: 1em;">
-              "<%= review.comment %>"
-            </p>
-          </div>
-
-          <div style="font-size: 0.85em; border-top: 2px solid #eee; padding-top: 12px; margin-top: 15px;">
-            <strong style="text-transform: uppercase; letter-spacing: 1px;">
-              <%= review.reviewer.userable.name %>
-            </strong>
-            <div style="color: #777; margin-top: 4px;">
-              <%= review.created_at.strftime("%b %d, %Y") %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-
+    <div class="reviews-grid">
+      <%= render partial: "reviews/review", collection: @reviews, as: :review %>
     </div>
   <% else %>
-    <p style="color: #666; font-style: italic; text-align: center;">No reviews yet for this seller.</p>
+    <p class="empty-text">No reviews yet for this user.</p>
   <% end %>
+</div>
+<!-- Active Listings Section -->
+<div id="active-section" class="tab-content items-section">
+  <% if @active_listings&.any? %>
+    <div class="items-grid">
+      <%= render partial: 'items/item', collection: @active_listings, as: :item %>
+    </div>
+  <% else %>
+    <p class="empty-text">No active listings available.</p>
+  <% end %>
+</div>
 
-  <h2 style="border-bottom: 4px solid black; width: fit-content; margin: 40px 0 20px 0;">
-    Items for Sale
-  </h2>
-
-  <%# Grid for Items - Make sure the item partial also uses turbo_frame_tag for its likes! %>
-  <div class="items-grid" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-    <%= render partial: 'items/item', collection: @items, as: :item %>
+<%if @user==current_user%>
+  <!-- Sold Items Section -->
+  <div id="sold-section" class="tab-content items-section">
+    <% if @sold_items.any? %>
+      <div class="items-grid">
+        <%= render partial: 'items/item', collection: @sold_items, as: :item %>
+      </div>
+    <% else %>
+      <p class="empty-text">No sold items.</p>
+    <% end %>
   </div>
+
+  <!-- Bought Items Section -->
+  <div id="bought-section" class="tab-content items-section">
+    <% if @bought_items.any? %>
+      <div class="items-grid">
+        <%= render partial: 'items/item', collection: @bought_items, as: :item %>
+      </div>
+    <% else %>
+      <p class="empty-text">No bought items.</p>
+    <% end %>
+  </div>
+  <%end%>
 </div>

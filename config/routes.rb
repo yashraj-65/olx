@@ -25,15 +25,14 @@ Rails.application.routes.draw do
 end
 resources :deals do
   resources :reviews do
-    collection do
-      post 'create_review'
-    end
+    
+      post 'create_review', on: :collection
+    
   end
 end 
 resources :sellers
 resources :likes
 
   
-  # Defines the root path route ("/")
-  # root "posts#index"
+
 end
