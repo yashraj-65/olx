@@ -1,3 +1,93 @@
+
+<style>
+/* Card Container */
+.review-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 140px; /* Ensures consistent grid height */
+}
+
+.review-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Header & Rating */
+.review-header {
+  margin-bottom: 10px;
+}
+
+.review-rating {
+  color: #febd69; /* Gold/Yellow for stars */
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Like & Delete Buttons */
+.like-btn {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  color: #555;
+  text-decoration: none;
+}
+
+.like-btn:hover {
+  background: #eee;
+  border-color: #ccc;
+}
+
+.like-btn.liked {
+  border-color: #ff4d4d;
+  background: #fff5f5;
+  color: #ff4d4d;
+}
+
+/* Comment Styling */
+.review-comment {
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #333;
+  margin: 10px 0;
+  line-height: 1.4;
+  /* Limit text to prevent cards from becoming too long */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer Section */
+.review-footer {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 10px;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-footer strong {
+  font-size: 0.85rem;
+  color: #002f34;
+}
+
+.review-date {
+  font-size: 0.75rem;
+  color: #999;
+}
+</style>
 <div class="review-card">
   <div class="review-content">
     <div class="review-header" style="display: flex; justify-content: space-between; align-items: center;">

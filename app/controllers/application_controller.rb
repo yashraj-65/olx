@@ -1,14 +1,13 @@
 class ApplicationController < ActionController::Base
+  before_action :authenticate_user!
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :description, :avatar])
+  end
   allow_browser versions: :modern
 
-  def current_user
-   
-    if params[:user_id].present?
-      session[:user_id] = params[:user_id]
-    end
-
-    @current_user ||= User.find_by(id: session[:user_id]) || User.first
-  end
-
-  helper_method :current_user
 end

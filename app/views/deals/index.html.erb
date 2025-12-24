@@ -1,5 +1,5 @@
 <style>
-  /* 1. Global & Industrial Header */
+
   .container {
     max-width: 1000px;
     margin: 60px auto;
@@ -16,7 +16,6 @@
     line-height: 0.9;
   }
 
-  /* 2. Industrial Segmented Navbar */
   .tab-radio { display: none; }
 
   .industrial-nav {
@@ -42,7 +41,7 @@
 
   .nav-item:hover { background: #f4f4f4; }
 
-  /* Toggle Logic */
+
   #tab-pending:checked ~ .industrial-nav label[for="tab-pending"],
   #tab-completed:checked ~ .industrial-nav label[for="tab-completed"] {
     background: black;
@@ -56,7 +55,6 @@
     display: block;
   }
 
-  /* 3. The Industrial Card */
   .deal-card {
     background: white;
     border: 2px solid black;
@@ -112,7 +110,7 @@
 
   .btn-dark { background: black; color: white; }
 
-  /* 5. Minimal Overlay */
+  
   .modal-overlay {
     display: none;
     position: fixed;
@@ -172,8 +170,11 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <%= link_to "VIEW ITEM", item_path(deal.item), class: "btn-industrial", style: "text-align:center" %>
+              <%unless (current_user.seller==deal.conversation.seller_profile)%>
               <%= link_to "PROFILE", seller_path(deal.item.seller), class: "btn-industrial", style: "background: #f9f9f9;" %>
-              
+              <%else%>
+              <%= link_to "PROFILE", seller_path(deal.conversation.buyer_profile), class: "btn-industrial", style: "background: #f9f9f9;" %>
+              <%end%> 
               <% unless current_user.seller == deal.item.seller %>
                 <%= link_to "RATE SELLER", "#review-modal-#{deal.id}", class: "btn-industrial btn-dark", style: "text-align:center", data: { turbo: false } %>
               <% end %>

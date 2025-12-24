@@ -19,7 +19,7 @@
       <% end %>
     </div>
 
-    
+    <%# Right Column: Details & Actions %>
     <div style="flex: 1; min-width: 300px;">
       <div style="background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
         <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">Item Details</h3>
@@ -36,6 +36,27 @@
             <%= @item.seller.userable.name %>
           </span>
         </p>
+
+        <%# --- ACTION BUTTONS START --- %>
+        <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+          <% if current_user && current_user.seller == @item.seller %>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <%= link_to "Edit Item", edit_item_path(@item), 
+                  style: "background-color: #ffde03; color: #000; text-decoration: none; text-align: center; padding: 12px; font-weight: bold; border: 2px solid #000; border-radius: 4px; display: block;" %>
+              
+              <%= button_to "Delete", item_path(@item), 
+                  method: :delete, 
+                  form: { style: 'width: 100%;' },
+                  style: "background-color: #ff4d4d; color: #fff; width: 100%; padding: 12px; font-weight: bold; border: 2px solid #000; border-radius: 4px; cursor: pointer;",
+                  data: { confirm: "Are you sure you want to delete this listing?" } %>
+            </div>
+          <% else %>
+            <%= button_to "Chat with Seller", conversations_path(seller_id: @item.seller.id, item_id: @item.id), 
+                method: :post, 
+                style: "background-color: #002f34; color: #fff; width: 100%; padding: 15px; font-weight: bold; border: 2px solid #000; border-radius: 4px; cursor: pointer; font-size: 1rem;" %>
+          <% end %>
+        </div>
+        <%# --- ACTION BUTTONS END --- %>
       </div>
 
       <div style="margin-top: 20px;">
@@ -61,5 +82,4 @@
   <div style="margin-top: 3rem; text-align: center;">
     <%= link_to '← Back to Marketplace', items_path, style: "color: #666; text-decoration: none; font-size: 0.9rem;" %>
   </div>
-
 </div>

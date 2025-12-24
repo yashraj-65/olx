@@ -23,20 +23,9 @@ class SellersController < ApplicationController
   end
 
 def load_sold_and_bought_items
-
-  @sold_items = Item
-    .joins("INNER JOIN conversations ON conversations.item_id = items.id")
-    .joins("INNER JOIN deals ON deals.conversation_id = conversations.id")
-    .where(conversations: { seller_id: @seller.id })
-    .where(deals: { status: Deal.statuses[:success] })
-    .distinct
+  @sold_items = @user.sold_items
   if @user.buyer
-    @bought_items = Item
-      .joins("INNER JOIN conversations ON conversations.item_id = items.id")
-      .joins("INNER JOIN deals ON deals.conversation_id = conversations.id")
-      .where(conversations: { buyer_id: @user.buyer.id })
-      .where(deals: { status: Deal.statuses[:success] })
-      .distinct
+    @bought_items = @user.bought_items
   else
     @bought_items = []
   end

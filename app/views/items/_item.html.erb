@@ -1,104 +1,140 @@
 <style>
-  .hero-title {
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-    color: #222;
-    letter-spacing: -0.5px;
-    margin: 10px 0;
+  /* Container for the background (add to your parent view) */
+  body {
+    background: linear-gradient(45deg, #f3f4f7, #e2e8f0);
+    min-height: 100vh;
   }
 
   .blog-card {
-    margin-top: 10px;
-    border: 2px solid black;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 4px 4px 0px black;
-    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 260px;
+    /* The "Glass" Core: Transparency + Blur */
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    
+    /* Soft border that mimics a glass edge */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    
+    /* Soft, deep shadow instead of the hard black one */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    
+    overflow: hidden;
+    transition: all 0.3s ease;
   }
 
   .blog-card:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0px black;
-  }
-
-  
-  .button-container form {
-    display: inline-block;
-    width: 100%;
-    margin-bottom: 8px;
-  }
-
-  .btn-brutal {
-    width: 100%;
-    height: 3em;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    border: 2px solid black;
-    background-color: #f0f0f0;
-    box-shadow: 3px 3px 0px black;
+    transform: translateY(-8px); /* Smooth lift-up */
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
     cursor: pointer;
-    transition: all 0.1s;
+  }
+
+  /* Image area - softened */
+  .item-image img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .price-tag {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 2px;
+  }
+
+  .hero-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Button Row */
+  .button-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* Glass Buttons */
+  .btn-minimal {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 36px;
+    text-decoration: none;
   }
 
-  .btn-brutal:active {
-    transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px black;
+  /* Primary Action */
+  .btn-brutal-yellow { 
+    background: rgba(255, 222, 3, 0.7); 
+    color: #000; 
+    width: 100%; 
+    box-shadow: 0 4px 15px rgba(255, 222, 3, 0.2);
+  }
+  
+  .btn-brutal-yellow:hover {
+    background: rgba(255, 222, 3, 0.9);
   }
 
-  .btn-view { background-color: #EADDCA; color: #8a5a32; }
-  .btn-chat { background-color: #0fd850; color: black; }
-  .btn-delete { background-color: #ff5f5f; color: white; }
-  .btn-like { background-color: white; }
+  /* Secondary/Like Action */
+  .btn-brutal-white { 
+    background: rgba(255, 255, 255, 0.5); 
+    color: #000; 
+    width: 100%; 
+  }
 
-  .item-image img {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #eee;
+  .btn-minimal:active {
+    transform: scale(0.95);
   }
 </style>
-
 <div class="blog-card">
-  <h1 class="hero-title"><%= item.title %></h1>
-
   <% if item.image.attached? %>
     <div class="item-image">
       <%= image_tag item.image %>
     </div>
+  <% else %>
+    <div class="item-image" style="height: 150px; background: rgba(255,255,255,0.2);"></div>
   <% end %>
 
-  <div style="margin: 15px 0; font-size: 14px; line-height: 1.6;">
-    <p><strong>Price:</strong> <span style="color: green; font-weight: bold;"><%= number_to_currency(item.price) %></span></p>
-    <p><strong>Condition:</strong> <%= item.condition.titleize %></p>
-    <p><strong>Description:</strong> <%= truncate(item.desc, length: 80) %></p>
-    <p><strong>Seller:</strong> <%= link_to item.seller.userable.name, seller_path(item.seller) %></p>
-  </div>
+  <div class="card-body">
+    <div class="price-tag"><%= number_to_currency(item.price, precision: 0) %></div>
+    <div class="hero-title"><%= item.title %></div>
 
-  <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
-  
-  <div class="button-container">
-    <%= button_to "View Details", item_path(item), method: :get, class: "btn-brutal btn-view" %>
+    <div class="button-row">
+      <div class="btn-view-wrap" style="flex: 3;">
+        <%= link_to "Details", item_path(item), class: "btn-minimal btn-brutal-yellow" %>
+      </div>
 
-    <% existing_like = item.likes.find_by(buyer: current_user.buyer) %>
-    <% if existing_like %>
-      <%= button_to "❤️ Unlike", item_like_path(item, existing_like), method: :delete, class: "btn-brutal btn-like" %>
-    <% else %>
-      <%= button_to "🤍 Like", item_likes_path(item), method: :post, class: "btn-brutal btn-like" %>
-    <% end %>
-
-    <% if current_user.seller && current_user.seller == item.seller %>
-      <%= button_to "Delete Item", item_path(item), method: :delete, class: "btn-brutal btn-delete", data: { confirm: "Are you sure?" } %>
-      <%= link_to "Edit Item", edit_item_path(item), class: "btn-brutal", style: "background-color: #ffde03; text-decoration: none;" %>
-    <% else %>
-      <%= button_to "Chat with Seller", conversations_path(seller_id: item.seller.id, item_id: item.id), method: :post, class: "btn-brutal btn-chat" %>
-    <% end %>
+      <div class="btn-like-wrap" style="flex: 1;">
+        <% existing_like = item.likes.find_by(buyer: current_user.buyer) %>
+        <% if existing_like %>
+          <%= button_to item_like_path(item, existing_like), method: :delete, class: "btn-minimal btn-brutal-white", style: "border:none; width:100%;" do %>
+            <span style="color: #ff4d4d;">❤️</span>
+          <% end %>
+        <% else %>
+          <%= button_to item_likes_path(item), method: :post, class: "btn-minimal btn-brutal-white", style: "border:none; width:100%;" do %>
+            🤍
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

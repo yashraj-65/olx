@@ -1,15 +1,226 @@
-/*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
- *
- * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
- *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
- *
- *= require_tree .
- *= require_self
- */
+/* Main Navbar Container */
+.navbar {
+  background-color: #131921;
+  padding: 0.6rem 2rem;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Left Side */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.logo {
+  color: white;
+  font-size: 1.5rem;
+  text-decoration: none;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.nav-link {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #febd69; /* Warm gold hover color */
+}
+
+/* Right Side - Tools & Profile */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-tools {
+  display: flex;
+  gap: 15px;
+  border-right: 1px solid #3a4553;
+  padding-right: 15px;
+}
+
+.tool-item {
+  color: white;
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tool-item:hover { color: #febd69; }
+
+/* Profile & Account */
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.account-link {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting {
+  font-size: 0.7rem;
+  color: #aaaaaa;
+}
+
+.sub-text {
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.logout-btn {
+  color: #ff6b6b;
+  text-decoration: none;
+  font-size: 0.75rem;
+  border: 1px solid #ff6b6b;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+/* Sell Button (Primary Action) */
+.btn-sell {
+  background: #febd69;
+  color: #111;
+  padding: 10px 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  border: 1px solid #a88734;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-sell:hover {
+  background: #f3a847;
+  transform: translateY(-1px);
+}
+
+.signin-link {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border: 1px solid white;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+  /* Define Light Mode Colors */
+  :root {
+    --bg-gradient: linear-gradient(45deg, #f3f4f7, #e2e8f0);
+    --card-bg: rgba(255, 255, 255, 0.4);
+    --card-border: rgba(255, 255, 255, 0.3);
+    --text-main: #1a202c;
+    --text-muted: #4a5568;
+    --glass-shadow: rgba(31, 38, 135, 0.1);
+  }
+
+  /* Define Dark Mode Colors */
+  [data-theme="dark"] {
+    --bg-gradient: linear-gradient(45deg, #0f172a, #1e293b);
+    --card-bg: rgba(15, 23, 42, 0.6);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glass-shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  body {
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    transition: background 0.3s ease;
+    min-height: 100vh;
+  }
+
+  .blog-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .price-tag { color: var(--text-main); }
+  .hero-title { color: var(--text-muted); }
+
+  /* Floating Toggle Button Style */
+/* Inline Navbar Toggle Style */
+.theme-toggle {
+  /* Remove the fixed positioning */
+  position: relative;
+  bottom: auto;
+  right: auto;
+  
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  margin: 0 10px;
+  
+  /* Glassmorphism Styling */
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 6px; /* Match your other navbar buttons */
+  
+  /* Colors */
+  color: white; /* Keep white to match navbar text */
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Ensure the icon stands out */
+#theme-icon {
+  font-size: 1rem;
+}
+
+/* Hide text label on small screens to prevent navbar overflow */
+@media (max-width: 900px) {
+  .theme-toggle span:not(#theme-icon) {
+    display: none;
+  }
+  .theme-toggle {
+    padding: 8px;
+    border-radius: 50%;
+  }
+}

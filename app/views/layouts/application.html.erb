@@ -18,41 +18,60 @@
 
     <%= stylesheet_link_tag "deal", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script>
+    // This runs immediately before the page renders to prevent flashing
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
   </head>
 
   <body>
- <nav class="navbar" style="background: #131921; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-  
-  <div class="nav-left" style="display: flex; align-items: center; gap: 20px;">
-    <%= link_to "MARKETPLACE", root_path, style: "color: white; font-size: 1.4rem; text-decoration: none; font-weight: 900; letter-spacing: -1px;" %>
-    <%= link_to "All Items", items_path, style: "color: #ccc; text-decoration: none; font-size: 0.9rem; font-weight: 500;" %>
-  </div>
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-left">
+      <%= link_to "MARKETPLACE", root_path, class: "logo" %>
+      <%= link_to "All Items", items_path, class: "nav-link" %>
+    </div>
 
-  <div class="nav-right" style="display: flex; align-items: center; gap: 15px;">
-    <% if current_user %>
-      <%# Secondary Icons/Links %>
-      <div class="user-tools" style="display: flex; gap: 12px; margin-right: 10px; border-right: 1px solid #3a4553; padding-right: 15px;">
-        <%= link_to "❤ Favs", likes_path, title: "Favorites", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
-        <%= link_to "💬 Chat", conversations_path, title: "Messages", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
-        <%= link_to "📦 Deals", deals_path, title: "My Deals", style: "color: white; text-decoration: none; font-size: 0.9rem;" %>
-      </div>
+    <div class="nav-right">
+      <% if user_signed_in? %>
+        <div class="user-tools">
+          <%= link_to likes_path, class: "tool-item", title: "Favorites" do %>
+            <span class="icon">❤</span> Favs
+          <% end %>
+          <%= link_to conversations_path, class: "tool-item", title: "Messages" do %>
+            <span class="icon">💬</span> Chat
+          <% end %>
+          <%= link_to deals_path, class: "tool-item", title: "My Deals" do %>
+            <span class="icon">📦</span> Deals
+          <% end %>
+        </div>
+        
+    <button id="theme-btn" class="theme-toggle">
+      <span id="theme-icon">🌙</span>
+    </button>
 
-      <%# Profile Link %>
-      <%= link_to seller_path(current_user.seller), style: "color: white; text-decoration: none; display: flex; flex-direction: column;" do %>
-        <span style="font-size: 0.7rem; color: #aaa;">Hello, <%= current_user.name.split.first %></span>
-        <span style="font-size: 0.9rem; font-weight: bold;">Account & Profile</span>
+        <div class="profile-meta">
+          <%= link_to seller_path(current_user.seller), class: "account-link" do %>
+            <span class="greeting">Hello, <%= current_user.name.split.first %></span>
+            <span class="sub-text">Account & Profile</span>
+          <% end %>
+          
+          <%= link_to "Logout", destroy_user_session_path, 
+                      data: { turbo_method: :delete }, 
+                      class: "logout-btn" %>
+        </div>
+
+        <%= link_to "SELL ITEM", new_item_path, class: "btn-sell" %>
+
+      <% else %>
+        <%= link_to "Sign In", new_user_session_path, class: "signin-link" %>
       <% end %>
-
-      <%# Primary Action Button %>
-      <%= link_to "SELL ITEM", new_item_path, style: "background: #febd69; color: #111; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 800; font-size: 0.85rem; border: 1px solid #a88734; transition: 0.2s;" %>
-      
-    <% else %>
-      <%= link_to "Sign In", new_user_session_path, style: "color: white; text-decoration: none; font-weight: bold;" %>
-    <% end %>
+    </div>
   </div>
 </nav>
 <p class="notice"><%= notice %></p> 
   <p class="alert"><%= alert %></p> 
-    <%= yield %> #yield will be replaced by cnents in view files
+    <%= yield %> 
   </body>
 </html>
