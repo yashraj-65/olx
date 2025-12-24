@@ -1,117 +1,57 @@
-<style>
-  /* Minimal but bold wrapper */
-  .minimal-form { max-width: 500px; margin: 0 auto; }
+<%# app/views/items/_form.html.erb %>
+<div style="max-width: 500px; margin: 2rem auto; font-family: sans-serif; color: #333;">
   
-  .input-wrapper {
-    position: relative;
-    margin-bottom: -3px; /* Overlaps borders for a "stacked" look */
-  }
+  <%# Dynamic heading: "New Item" or "Edit Item" %>
+  <h1 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.5rem;">
+    <%= item.new_record? ? "New Item" : "Edit Item" %>
+  </h1>
 
-  .brutal-field {
-    width: 100%;
-    border: 3px solid black;
-    padding: 16px;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: monospace;
-    background: white;
-    outline: none;
-    box-sizing: border-box;
-  }
-
-  /* Focus effect: change color instead of moving */
-  .brutal-field:focus {
-    background: #ffff00; /* Neon yellow highlight */
-    z-index: 10;
-  }
-
-  /* Minimal Category Grid */
-  .cat-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 15px 0;
-  }
-
-  .cat-tag {
-    border: 2px solid black;
-    padding: 5px 12px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    cursor: pointer;
-    background: white;
-  }
-
-  .cat-tag input:checked + span {
-    background: black;
-    color: white;
-  }
-
-  .btn-submit-minimal {
-    width: 100%;
-    background: black;
-    color: white;
-    border: none;
-    padding: 20px;
-    font-weight: 900;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-top: 20px;
-    text-transform: uppercase;
-  }
-
-  .btn-submit-minimal:hover { background: #0fd850; color: black; }
-</style>
-
-<div class="minimal-form">
-  <%= form_with(model: item, local: true) do |f| %>
+  <%= form_with model: item, local: true do |f| %>
     
-    <%# Simple error line if something fails %>
-    <% if item.errors.any? %>
-      <div style="color: red; font-weight: 800; margin-bottom: 10px;">
-        ! <%= item.errors.full_messages.first %>
+    <div style="margin-bottom: 1rem;">
+      <%= f.label :title, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+      <%= f.text_field :title, style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+      <%= f.label :desc, "Description", style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+      <%= f.text_area :desc, rows: 3, style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
+      <div style="flex: 1;">
+        <%= f.label :price, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+        <%= f.number_field :price, step: 0.01, style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
       </div>
-    <% end %>
-
-    <div class="input-wrapper">
-      <%= f.text_field :title, placeholder: "ITEM TITLE", class: "brutal-field" %>
+      <div style="flex: 1;">
+        <%= f.label :condition, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+        <%= f.select :condition, Item.conditions.keys.map { |k| [k.titleize, k] }, {}, { style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; background: white;" } %>
+      </div>
     </div>
 
-    <div class="input-wrapper">
-      <%= f.number_field :price, step: 0.01, placeholder: "PRICE (0.00)", class: "brutal-field" %>
+    <div style="margin-bottom: 1rem;">
+      <%= f.label :image, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+      <%= f.file_field :image, style: "font-size: 0.9rem;" %>
     </div>
 
-    <div class="cat-grid">
-      <%= f.collection_check_boxes :category_ids, Category.all, :id, :kind do |b| %>
-        <label class="cat-tag">
-          <%= b.check_box(style: "display: none;") %>
-          <span><%= b.text.upcase %></span>
-        </label>
-      <% end %>
-    </div>
-    <div class="input-wrapper" style="border: 3px solid black; padding: 15px; background: white;">
-  <label class="brutal-label" style="margin-bottom: 10px; display: block;">Current Image</label>
-  
-  <% if item.image.attached? %>
-    <div style="margin-bottom: 15px; border: 2px solid black; width: fit-content;">
-      <%= image_tag item.image, style: "width: 100px; height: 100px; object-fit: cover; display: block;" %>
-    </div>
-  <% else %>
-    <p style="font-size: 0.7rem; color: #888; margin-bottom: 10px;">NO IMAGE ATTACHED</p>
-  <% end %>
-
-  <%= f.label :image, "UPLOAD NEW PHOTO", class: "back-nav", style: "cursor: pointer; background: #eee; border: 2px solid black; width: fit-content;" %>
-  <%= f.file_field :image, class: "brutal-field", style: "display: none;", onchange: "this.previousElementSibling.innerText = 'FILE SELECTED!'" %>
-</div>
-    <div class="input-wrapper">
-      <%= f.text_area :desc, placeholder: "DESCRIPTION...", rows: 3, class: "brutal-field" %>
+    <div style="margin-bottom: 1rem; padding: 10px; background: #f9f9f9; border: 2px solid black; border-radius: 8px;">
+      <span style="display: block; font-weight: bold; margin-bottom: 8px;">Categories</span>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.9rem;">
+        <%= f.collection_check_boxes :category_ids, Category.all, :id, ->(c) { c.kind.titleize } do |b| %>
+          <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+            <%= b.check_box %> <%= b.text %>
+          </label>
+        <% end %>
+      </div>
     </div>
 
-    <div class="input-wrapper">
-      <%= f.text_field :warranty, placeholder: "WARRANTY INFO", class: "brutal-field" %>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+      <%= f.check_box :is_negotiable %>
+      <%= f.label :is_negotiable, "Negotiable?", style: "font-size: 0.9rem; cursor: pointer;" %>
     </div>
 
-    <%= f.submit "UPDATE", class: "btn-submit-minimal" %>
-    
+    <%# The button will automatically say "Create Item" or "Update Item" %>
+    <%= f.submit nil, class: "btn-brutal", style: "width: 100%; background: #000; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 4px 4px 0px #666;" %>
+
   <% end %>
 </div>

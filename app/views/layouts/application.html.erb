@@ -51,6 +51,8 @@
     <% end %>
   </div>
 </nav>
-    <%= yield %>
+<p class="notice"><%= notice %></p> 
+  <p class="alert"><%= alert %></p> 
+    <%= yield %> #yield will be replaced by cnents in view files
   </body>
 </html>
