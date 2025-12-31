@@ -7,5 +7,13 @@ class Review < ApplicationRecord
                        less_than_or_equal_to: 5,
                        greater_than_or_equal_to: 1
                      }
+
+    def self.ransackable_attributes(auth_object = nil)      
+      ["id", "comment", "rating"]
+    end
+
+    def self.ransackable_associations(auth_object = nil)
+      ["seller", "deals"]
+    end
     
 end

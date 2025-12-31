@@ -189,10 +189,12 @@
       <p class="member-since">Curating since <%= @user.created_at.strftime("%B %Y") %></p>
 
       <div class="user-rating-box">
-        <span class="star-rating">★★★★☆</span>
+        <span class="star-rating">
+          <% avg = @user.seller.reviews.average(:rating).to_i %>
+          <%= "★" * avg %><%= "☆" * (5 - avg) %>
+        </span>
         <span class="rating-count">
-          <%=@user.seller.reviews.average(:rating)%>
-        <%=(@user.seller.reviews.count)%>
+          (<%= @user.seller.reviews.count %> reviews)
         </span>
       </div>
 
@@ -206,6 +208,16 @@
           <%= @user.description.presence || "This collector hasn't shared their story yet." %>
         </p>
       </div>
+ <%# Corrected Stats Section %>
+<div class="user-stats" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
+  <div style="font-size: 0.75rem; letter-spacing: 1px; color: #999;">PURCHASE HISTORY</div>
+  <div style="font-size: 1.1rem; font-weight: 600; color: #1a1a1a;">
+    <%= pluralize(@user.buyer.purchase_count, 'Order') %>
+  </div>
+  <div style="font-size: 0.9rem; color: #666;">
+    Total Spent: <%= number_to_currency(@user.buyer.total_spent) %>
+  </div>
+</div>
     </div>
   </aside>
 

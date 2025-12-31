@@ -1,6 +1,4 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
     has_one :buyer, as: :userable
@@ -26,12 +24,21 @@ class User < ApplicationRecord
             format: { with: PASSWORD_FORMAT, 
                       message: "must include at least one uppercase letter, one lowercase letter, one number, and one special character" }, 
             allow_nil: true
-     after_create :create_default_profiles
+  after_create :create_default_profiles
+
     private
    
-  def create_default_profiles
+    def create_default_profiles
         self.create_buyer
         self.create_seller
+    end
+
+    def self.ransackable_attributes(auth_object = nil)
+      ["id", "name", "email", "role", "created_at"] 
+    end
+   
+    def self.ransackable_associations(auth_object = nil)
+      ["seller", "buyer"]
     end
 
 end

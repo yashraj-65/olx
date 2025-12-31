@@ -14,4 +14,12 @@ class Item < ApplicationRecord
     def set_default_status
         self.status||= :available
     end
+    def self.ransackable_attributes(auth_object = nil)      
+      ["id", "title", "price", "status", "condition", "desc", "warranty", "color", "created_at"]
+    end
+    def self.ransackable_associations(auth_object = nil)
+      ["seller", "deals"]
+    end
+
+
 end
