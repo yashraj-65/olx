@@ -9,6 +9,9 @@ class Item < ApplicationRecord
     enum condition: {brand_new: 0, small_defect: 1, damaged: 2}
     before_create :set_default_status
 
+    scope :filter_by_category, -> (cat_id) {
+      joins(:categories).where(categories: { id: cat_id}) if cat_id.present? && cat_id!="All Categories"}
+    scope :search_by_query, -> (query) { where("title ILIKE ? OR description ILIKE ?", "%#{query}%", "%#{query}%") if query.present? }
     private
 
     def set_default_status

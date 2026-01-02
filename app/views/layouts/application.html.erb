@@ -70,6 +70,15 @@
     </div>
   </div>
 </nav>
+
+
+
+<%# app/views/layouts/application.html.erb %>
+<%= render "items/search_bar" if current_page?(root_path) || (controller_name == "items" && action_name == "index") %>
+
+
+
+
 <% if notice %>
   <div class="flash-message notice" data-controller="flash">
     <%= notice %>
@@ -83,6 +92,8 @@
     <button type="button" class="close-btn" data-action="click->flash#dismiss">&times;</button>
   </div>
 <% end %>
-    <%= yield %> 
+    <main class="container">
+    <%= yield %>
+  </main>
   </body>
 </html>

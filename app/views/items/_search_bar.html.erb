@@ -1,0 +1,24 @@
+<%# app/views/items/_search_bar.html.erb %>
+<div class="search-section">
+  <div class="search-container">
+    <%= form_with url: items_path, method: :get, class: "search-form", data: { turbo_frame: "items_list" } do |f| %>
+      <div class="search-input-group">
+        <div class="category-select">
+          <%= f.collection_select :category, Category.all, :id, :kind, 
+              { include_blank: "All Categories", selected: params[:category] }, 
+              { name: "category", class: "cat-dropdown" } %>
+        </div>
+        
+        <%= f.text_field :query, 
+            name: "query",
+            value: params[:query],
+            placeholder: "Search items...",
+            class: "search-input" %>
+            
+        <button type="submit" class="search-btn">
+          <span class="search-icon">🔍</span>
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>

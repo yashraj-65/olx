@@ -2,6 +2,15 @@ class ItemsController < ApplicationController
     before_action :ensure_owner, only: [:destroy]
     def index
         @items = Item.where.not(status: :sold).or(Item.where(status: nil))
+        @items = Item.all
+        if params[:category].present? && params[:category] != ""
+            @items = @items.filter_by_category(params[:category])
+        end
+
+        
+        if params[:query].present?
+            @items = @items.search_by_query(params[:query])
+        end
     end
     def new
         @item = Item.new

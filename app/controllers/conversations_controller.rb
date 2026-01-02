@@ -21,4 +21,6 @@ class ConversationsController < ApplicationController
     @messages = @conversation.messages
     @message = Message.new
   end
+
+  
 end

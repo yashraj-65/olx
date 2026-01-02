@@ -247,3 +247,74 @@
     border-radius: 50%;
   }
 }
+/* Search Section (Below Navbar) */
+.search-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.search-form {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.search-input-group {
+  display: flex;
+  background: white; /* Keep input white for readability */
+  border-radius: 4px;
+  overflow: hidden;
+  border: 2px solid #febd69; /* Match your Sell button */
+}
+
+.cat-dropdown {
+  background: #f3f3f3;
+  border: none;
+  border-right: 1px solid #ddd;
+  padding: 0 15px;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.search-input {
+  flex-grow: 1;
+  border: none;
+  padding: 12px 15px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-btn {
+  background: #febd69;
+  border: none;
+  padding: 0 25px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-btn:hover { background: #f3a847; }
+
+/* Category Tabs */
+.category-tabs {
+  max-width: 1400px;
+  margin: 10px auto 0;
+  padding: 0 2rem;
+  display: flex;
+  gap: 25px;
+}
+
+.tab-item {
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.tab-item:hover {
+  opacity: 1;
+  color: #febd69;
+}
