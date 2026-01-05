@@ -1,24 +1,28 @@
 class ItemsController < ApplicationController
     before_action :ensure_owner, only: [:destroy]
-    def index
-        @items = Item.where.not(status: :sold).or(Item.where(status: nil))
-        @items = Item.all
-        if params[:category].present? && params[:category] != ""
-            @items = @items.filter_by_category(params[:category])
-        end
 
-        
-        if params[:query].present?
-            @items = @items.search_by_query(params[:query])
-        end
+
+    def index
+    @items = Item.filter_by_category(params[:category])
+    if params[:query].present?
+        @items = @items.search_by_query(params[:query])
     end
+    @items = @items.with_attached_image.includes(seller: :userable)
+
+    end
+
+
     def new
         @item = Item.new
         @categories = Category.all
     end
+
+
     def show
         @item = Item.find(params[:id])
     end
+
+
     def create
         seller = current_user.seller||current_user.create_seller
         @item = seller.items.build(item_params)
@@ -30,6 +34,8 @@ class ItemsController < ApplicationController
             render :new
         end
     end
+
+
     def destroy
         seller = current_user.seller || current_user.create_seller
         @item = seller.items.find(params[:id])
@@ -40,11 +46,14 @@ class ItemsController < ApplicationController
         end
     end
 
+
     def edit
         seller = current_user.seller || current_user.create_seller
         @item=seller.items.find(params[:id])
         @categories = Category.all
     end
+
+
     def update
         seller = current_user.seller || current_user.create_seller
         @item = seller.items.find(params[:id])
@@ -56,6 +65,8 @@ class ItemsController < ApplicationController
         end
 
     end
+
+
 private
         def item_params
             params.require(:item).permit(:title, :desc, :status, :warranty, :color, :price, :condition, :is_negotiable, :image, category_ids: [])

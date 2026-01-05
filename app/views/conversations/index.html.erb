@@ -1,67 +1,320 @@
 <style>
-  
+  body {
+  margin: 0;
+  overflow: hidden; /* This prevents the whole website from scrolling */
+}
+  :root {
+    --primary: #0084ff;
+    --background: #ffffff;
+    --foreground: #1c1e21;
+    --secondary: #f0f2f5;
+    --muted: #65676b;
+    --border: #e4e6eb;
+    --accent: #e7f3ff;
+    --radius: 12px;
+    --shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .messenger-container {
+    display: flex;
+    height: 80vh;
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 15px;
+    box-shadow: var(--shadow);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  /* Sidebar Styling */
+  .conversations-panel {
+    width: 360px;
+    height: 100%;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+  }
+
+  .panel-header {
+    padding: 16px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .panel-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--foreground);
+  }
+
+  .convo-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 0 8px;
+  }
+
   .convo-item {
-    transition: all 0.3s ease; 
-    cursor: pointer;
+    margin: 4px 0;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
   }
 
   .convo-item:hover {
-    background-color: #ffffff !important;
-    transform: translateY(-2px); 
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+    background-color: var(--secondary);
   }
-
- 
-  .convo-link {
-    text-decoration: none !important;
-    color: #333 !important;
-    display: block;
-    width: 100%;
-    font-weight: 500;
-  }
-
 
   .convo-item.active-chat {
-    background-color: #ffffff !important;
-    border: 2px solid #b2c6df;
+    background-color: var(--accent);
   }
 
-  
-  .conversations-panel {
-    height: 80vh;
+  .convo-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar-circle {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #0084ff, #00c6ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .convo-info {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .item-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--foreground);
+  }
+
+  .seller-name {
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Chat Window Styling */
+  .chat-window {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+    position: relative;
+  }
+
+  .chat-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    z-index: 10;
+  }
+
+  .header-info {
+    flex-grow: 1;
+  }
+
+  .header-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--foreground);
+  }
+
+  .messages-area {
+    flex-grow: 1;
+    padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-image: radial-gradient(var(--border) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-position: -19px -19px;
+  }
+
+  /* Placeholder for message bubbles to show styling */
+  .message-bubble {
+    max-width: 65%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    position: relative;
+  }
+
+  .message-sent {
+    align-self: flex-end;
+    background-color: var(--primary);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .message-received {
+    align-self: flex-start;
+    background-color: var(--secondary);
+    color: var(--foreground);
+    border-bottom-left-radius: 4px;
+  }
+
+  .message-input-container {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .input-wrapper {
+    flex-grow: 1;
+    background: var(--secondary);
+    border-radius: 20px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-field {
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: 4px 0;
+    outline: none;
+    font-size: 15px;
+    color: var(--foreground);
+  }
+
+  .input-field::placeholder {
+    color: var(--muted);
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--muted);
+    text-align: center;
+    padding: 40px;
+  }
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 32px;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #bcc0c4;
   }
 </style>
 
-<div class="messenger-container" style="display: flex; font-family: 'Inter', sans-serif;">
-  
-  <div class="conversations-panel" style="width: 30%; border-right: 1px solid #ccc; padding: 10px;">
-    <h3 style="padding-left: 10px;">Your Chats</h3>
+<div class="messenger-container">
+  <div class="conversations-panel">
+    <div class="panel-header">
+      <h1>Chats</h1>
+    </div>
     
-    <% @conversations.each do |convo| %>
-      <%# Check if this convo is the one currently being viewed %>
-      <div class="convo-item <%= 'active-chat' if @conversation == convo %>" 
-           style="background: #e2d9d9ff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 1rem; border-radius: 10px; margin: 10px 5px;">
-        
-        <%= link_to conversation_path(convo), class: "convo-link" do %>
-          <div style="font-size: 1rem;"><%= convo.item.title %></div>
-          <div style="font-size: 0.8rem; color: #666; margin-top: 4px;">
-            with <%= convo.seller_profile.userable.name %>
-          </div>
-        <% end %>
-
-      </div>
-    <% end %>
+    <div class="convo-list">
+      <% @conversations.each do |convo| %>
+        <div class="convo-item <%= 'active-chat' if @conversation == convo %>">
+          <%= link_to conversation_path(convo), class: "convo-link" do %>
+            <div class="avatar-circle">
+              <%= convo.seller_profile.userable.name[0].upcase %>
+            </div>
+            <div class="convo-info">
+              <div class="item-title"><%= convo.item.title %></div>
+              <div class="seller-name">
+                <%= convo.seller_profile.userable.name %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 
-  <div class="chat-window" style="flex-grow: 1; padding: 20px; background-color: white;">
+  <div class="chat-window">
     <% if @conversation %>
-       <%# Your existing messages loop goes here %>
+       <div class="chat-header">
+         <div class="avatar-circle" style="width: 40px; height: 40px; font-size: 16px;">
+           <%= @conversation.seller_profile.userable.name[0].upcase %>
+         </div>
+         <div class="header-info">
+           <div class="header-title"><%= @conversation.item.title %></div>
+           <div class="seller-name">Active now</div>
+         </div>
+       </div>
+       
+       <div class="messages-area">
+          <%# Render your messages here %>
+          <% if @messages.any? %>
+            <%= render @messages %>
+          <% else %>
+            <div class="empty-state" style="justify-content: flex-end; padding-bottom: 20px;">
+              <p style="font-size: 13px;">No messages yet. Say hi!</p>
+            </div>
+          <% end %>
+       </div>
+
+       <div class="message-input-container">
+          <div class="input-wrapper">
+            <input type="text" class="input-field" placeholder="Aa">
+          </div>
+          <div style="color: var(--primary); font-weight: 600; cursor: pointer;">
+            Send
+          </div>
+       </div>
     <% else %>
-      <div style="text-align: center; margin-top: 100px; color: #999;">
-        <p>Select a conversation to start chatting.</p>
+      <div class="empty-state">
+        <div class="empty-icon">💬</div>
+        <h2 style="color: var(--foreground); font-weight: 700; margin-bottom: 8px;">Select a chat</h2>
+        <p>Choose from your existing conversations or start a new one to begin messaging.</p>
       </div>
     <% end %>
   </div>
-
 </div>

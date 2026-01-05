@@ -10,8 +10,14 @@ class Item < ApplicationRecord
     before_create :set_default_status
 
     scope :filter_by_category, -> (cat_id) {
-      joins(:categories).where(categories: { id: cat_id}) if cat_id.present? && cat_id!="All Categories"}
-    scope :search_by_query, -> (query) { where("title ILIKE ? OR description ILIKE ?", "%#{query}%", "%#{query}%") if query.present? }
+      query = where.not(items: { status: :sold })
+      if cat_id.present? && cat_id != "All Categories"
+        query = query.joins(:categories).where(categories: { id: cat_id })
+      end
+
+      query
+    }
+    scope :search_by_query, -> (query) { where('title ILIKE ? OR items."desc" ILIKE ?', "%#{query}%", "%#{query}%") if query.present? }
     private
 
     def set_default_status

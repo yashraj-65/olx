@@ -58,3 +58,7 @@ end
 gem "devise"
 gem 'sassc-rails'
 gem 'activeadmin'
+gem "actioncable" 
+
+# The messenger that handles the socket traffic
+gem "redis", "~> 4.0"

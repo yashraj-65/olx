@@ -13,14 +13,13 @@ class ConversationsController < ApplicationController
     def index
         @conversations = Conversation.where("buyer_id=? OR seller_id=?",current_user.buyer&.id,current_user.seller&.id).compact
     end
-    def show
 
-    @conversation = Conversation.find(params[:id])
-    
 
-    @messages = @conversation.messages
-    @message = Message.new
-  end
-
+def show
+  @conversation = Conversation.find(params[:id])
+  @conversations = Conversation.where(buyer: current_user).or(Conversation.where(seller: current_user))
+  @messages = @conversation.messages.includes(:user) # Solve N+1 for messages!
+  @message = Message.new
+end
   
 end
