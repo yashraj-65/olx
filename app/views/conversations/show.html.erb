@@ -1,14 +1,14 @@
 <%# CSS for the Modal and Stacking %>
 <style>
   .modal-overlay {
-    display: none; /* Controlled by JS */
+    display: none; 
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(2px);
-    z-index: 99999; /* Ensure it is above everything */
+    z-index: 99999;
     justify-content: center;
     align-items: center;
   }
@@ -22,6 +22,18 @@
     max-width: 450px;
     position: relative;
   }
+
+  /* Default: White box on the left */
+  .message-row[data-sender-id="<%= current_user.id %>"] {
+    justify-content: flex-end !important;
+  }
+
+  .message-row[data-sender-id="<%= current_user.id %>"] .message-box {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: -4px 4px 0px #888 !important;
+  }
+
 
   .btn-brutal {
     border: 3px solid black;
@@ -55,7 +67,6 @@
         </div>
       </div>
 
-      <%# PROPOSE DEAL BUTTON - Fixed with explicit JS call %>
       <button type="button" 
               class="btn-brutal" 
               style="padding: 10px 20px; background: #ffde03; font-size: 14px;"
@@ -66,25 +77,20 @@
 
     <%# Messages Body %>
     <div id="chat-window" class="card-body" style="flex-grow: 1; overflow-y: auto; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-      <% @messages.each do |message| %>
-        <% is_current_user = (message.user_id == current_user.id) %>
-        
-        <div style="display: flex; <%= is_current_user ? 'justify-content: flex-end;' : 'justify-content: flex-start;' %>">
-          <div class="message-box" 
-               style="max-width: 75%; padding: 12px 18px; border: 3px solid black; font-weight: 600;
-               <%= is_current_user ? 'background: #000; color: #fff; box-shadow: -4px 4px 0px #888;' : 'background: #fff; color: #000; box-shadow: 4px 4px 0px black;' %>">
-            <p style="margin: 0;"><%= message.body %></p>
-            <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.6; text-align: right;">
-              <%= message.created_at.strftime("%I:%M %p") %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      
+      <%# --- REAL-TIME LISTENER --- %>
+      <%= turbo_stream_from @conversation %>
+
+      <%# --- MESSAGES TARGET CONTAINER --- %>
+      <div id="messages_list" style="display: flex; flex-direction: column; gap: 15px;">
+        <%= render @messages %>
+      </div>
     </div>
 
     <%# Input Section %>
     <div class="message-input" style="padding: 20px; background: white; border-top: 4px solid black;">
-      <%= form_with(model: [@conversation, @message], local: true, style: "display: flex; gap: 10px;") do |f| %>
+      <%# Added data: { turbo_action: "replace" } to help clear the form %>
+      <%= form_with(model: [@conversation, @message], id: "message_form", style: "display: flex; gap: 10px;") do |f| %>
         <%= f.text_field :body, 
             placeholder: "Type your message...", 
             autocomplete: 'off',
@@ -124,13 +130,23 @@
 </div>
 
 <script>
-  // Script to keep scroll at bottom
   function scrollToBottom() {
     const chatWindow = document.getElementById('chat-window');
     if (chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 
-  // Run on initial load and after Turbo navigation
+  // Auto-scroll on load
   scrollToBottom();
-  document.addEventListener("turbo:load", scrollToBottom);
+
+  // Auto-scroll whenever a new message is added via Turbo Stream
+  document.addEventListener("turbo:before-stream-render", function() {
+    setTimeout(scrollToBottom, 50);
+  });
+
+  // Clear the form after sending (if not using create.turbo_stream.erb)
+  document.getElementById("message_form").addEventListener("turbo:submit-end", (event) => {
+    if (event.detail.success) {
+      event.target.reset();
+    }
+  });
 </script>

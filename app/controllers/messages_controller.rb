@@ -7,9 +7,10 @@ class MessagesController < ApplicationController
         @message.user = current_user
 
         if @message.save
-            redirect_back fallback_location: conversation_path(@conversation)
-        else
-            redirect_back fallback_location: conversation_path(@conversation)  
+            respond_to do |format|
+                format.turbo_stream
+                format.html {redirect_to @message.conversation}
+            end
         end
 
     end

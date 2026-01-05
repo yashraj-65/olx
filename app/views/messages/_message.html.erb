@@ -1,0 +1,11 @@
+
+<%# We add a data-user-id so the browser knows who sent this %>
+<div class="message-row" data-sender-id="<%= message.user_id %>" style="display: flex; justify-content: flex-start;">
+  <div class="message-box" 
+       style="max-width: 75%; padding: 12px 18px; border: 3px solid black; font-weight: 600; background: #fff; color: #000; box-shadow: 4px 4px 0px black;">
+    <p style="margin: 0;"><%= message.body %></p>
+    <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.6; text-align: right;">
+      <%= message.created_at.strftime("%I:%M %p") %>
+    </div>
+  </div>
+</div>
