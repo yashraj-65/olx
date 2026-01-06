@@ -6,6 +6,11 @@ ActiveAdmin.register Buyer do
   # Uncomment all parameters which should be permitted for assignment
   #
    permit_params :userable_type, :userable_id, :purchase_count, :total_spent
+
+   scope "more than 2 purchases" do |buys|
+    Buyer.where("purchase_count >= ?",2)
+   end
+
    filter :userable_id
    filter :purchase_count
    filter :total_spent

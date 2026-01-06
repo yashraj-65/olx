@@ -5,7 +5,7 @@ class Message < ApplicationRecord
 
     after_create_commit ->{
         broadcast_append_to self.conversation,
-        target: "messages_list"
+        target: "   "
     }
     
     def self.ransackable_attributes(auth_object=nil)

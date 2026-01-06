@@ -1,135 +1,14 @@
-<%# Professional Messenger Styling %>
+<%# CSS for the Modal and Stacking %>
 <style>
-  :root {
-    --primary: #0084ff;
-    --bg-light: #f0f2f5;
-    --border: #e4e6eb;
-    --text-main: #1c1e21;
-    --text-muted: #65676b;
-    --shadow: 0 2px 4px rgba(0,0,0,.1), 0 8px 16px rgba(0,0,0,.08);
-  }
-
-  /* Reset layout for full-screen feel */
-  body { margin: 0; background-color: #f0f2f5; }
-
-  .chat-container {
-    height: 80vh;
-    max-width: 1000px;
-    margin: 20px auto;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-
-  /* Header */
-  .chat-header {
-    padding: 20px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    background: white;
-  }
-
-  .user-info { display: flex; align-items: center; gap: 12px; }
-  
-  .avatar-circle {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6e8efb, #a7a1ff);
-    color: white; font-weight: bold;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .btn-action {
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .btn-action:hover { background-color: #0073e6; }
-
-  /* Messages Area */
-  .messages-viewport {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .msg-bubble {
-    max-width: 70%;
-    padding: 10px 16px;
-    font-size: 15px;
-    line-height: 1.4;
-  }
-
-  .msg-sent {
-    align-self: flex-end;
-    background-color: var(--primary);
-    color: white;
-    border-radius: 18px 18px 4px 18px;
-  }
-
-  .msg-received {
-    align-self: flex-start;
-    background-color: #e4e6eb;
-    color: var(--text-main);
-    border-radius: 18px 18px 18px 4px;
-  }
-
-  .timestamp {
-    font-size: 11px;
-    margin-top: 4px;
-    opacity: 0.7;
-    text-align: right;
-  }
-
-
-  .chat-footer {
-    padding: 16px 20px;
-    background: white;
-    border-top: 1px solid var(--border);
-  }
-
-  .input-group {
-    display: flex;
-    gap: 12px;
-    background: #f0f2f5;
-    padding: 8px 16px;
-    border-radius: 20px;
-  }
-
-  .modern-input {
-    flex-grow: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 15px;
-  }
-
   .modal-overlay {
-    display: none; /* Controlled by JS */
+    display: none; 
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(2px);
-    z-index: 99999; /* Ensure it is above everything */
+    z-index: 99999;
     justify-content: center;
     align-items: center;
   }
@@ -143,6 +22,18 @@
     max-width: 450px;
     position: relative;
   }
+
+  /* Default: White box on the left */
+  .message-row[data-sender-id="<%= current_user.id %>"] {
+    justify-content: flex-end !important;
+  }
+
+  .message-row[data-sender-id="<%= current_user.id %>"] .message-box {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: -4px 4px 0px #888 !important;
+  }
+
 
   .btn-brutal {
     border: 3px solid black;
@@ -162,19 +53,20 @@
   }
 </style>
 
-<div class="chat-container">
-  <%# Header %>
-  <div class="chat-header">
-    <div class="user-info">
-      <div class="avatar-circle">
-        <%= @conversation.seller_profile.userable.name[0].upcase %>
-      </div>
-      <div>
-        <div style="font-weight: 700; color: var(--text-main);"><%= @conversation.item.title %></div>
-        <div style="font-size: 12px; color: var(--text-muted);">with <%= @conversation.seller_profile.userable.name %></div>
+<div class="chat-wrapper" style="height: calc(100vh - 100px); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;">
+  
+  <div class="card-container" style="display: flex; flex-direction: column; height: 100%; border: 4px solid black; background: white; box-shadow: 10px 10px 0px black;">
+    
+    <%# Header Section %>
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 4px solid black;">
+      <div style="display: flex; align-items: center;">
+        <div class="img-avatar" style="width: 45px; height: 45px; border: 3px solid black; background: #ffde03; margin-right: 15px;"></div>
+        <div class="text-chat">
+          <span style="font-size: 0.7rem; color: #666; display: block; text-transform: uppercase;">Conversation with</span>
+          <span style="font-weight: 900; font-size: 1.2rem;"><%= @conversation.seller_profile.userable.name %></span>
+        </div>
       </div>
 
-      <%# PROPOSE DEAL BUTTON - Fixed with explicit JS call %>
       <button type="button" 
               class="btn-brutal" 
               style="padding: 10px 20px; background: #ffde03; font-size: 14px;"
@@ -185,25 +77,20 @@
 
     <%# Messages Body %>
     <div id="chat-window" class="card-body" style="flex-grow: 1; overflow-y: auto; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-      <% @messages.each do |message| %>
-        <% is_current_user = (message.user_id == current_user.id) %>
-        
-        <div style="display: flex; <%= is_current_user ? 'justify-content: flex-end;' : 'justify-content: flex-start;' %>">
-          <div class="message-box" 
-               style="max-width: 75%; padding: 12px 18px; border: 3px solid black; font-weight: 600;
-               <%= is_current_user ? 'background: #000; color: #fff; box-shadow: -4px 4px 0px #888;' : 'background: #fff; color: #000; box-shadow: 4px 4px 0px black;' %>">
-            <p style="margin: 0;"><%= message.body %></p>
-            <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.6; text-align: right;">
-              <%= message.created_at.strftime("%I:%M %p") %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      
+      <%# --- REAL-TIME LISTENER --- %>
+      <%= turbo_stream_from @conversation %>
+
+      <%# --- MESSAGES TARGET CONTAINER --- %>
+      <div id="messages_list" style="display: flex; flex-direction: column; gap: 15px;">
+        <%= render @messages %>
+      </div>
     </div>
 
     <%# Input Section %>
     <div class="message-input" style="padding: 20px; background: white; border-top: 4px solid black;">
-      <%= form_with(model: [@conversation, @message], local: true, style: "display: flex; gap: 10px;") do |f| %>
+      <%# Added data: { turbo_action: "replace" } to help clear the form %>
+      <%= form_with(model: [@conversation, @message], id: "message_form", style: "display: flex; gap: 10px;") do |f| %>
         <%= f.text_field :body, 
             placeholder: "Type your message...", 
             autocomplete: 'off',
@@ -217,24 +104,26 @@
   </div>
 </div>
 
-<%# MODAL %>
+<%# THE MODAL %>
 <div id="propose-modal" class="modal-overlay">
   <div class="modal-card">
-    <h3 style="margin-top: 0;">Make an Offer</h3>
-    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-      Confirm the final price for <strong><%= @conversation.item.title %></strong>.
-    </p>
+    <button type="button" 
+            style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 30px; font-weight: bold; cursor: pointer;" 
+            onclick="document.getElementById('propose-modal').style.display='none'">&times;</button>
+    
+    <h2 style="margin: 0 0 10px 0; text-transform: uppercase;">New Proposal</h2>
+    <p style="margin-bottom: 25px; color: #666;">Set the final price for <strong><%= @conversation.item.title %></strong>.</p>
 
     <%= form_with(model: [@conversation, Deal.new], local: true) do |f| %>
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text-muted);">OFFER AMOUNT ($)</label>
+      <div style="margin-bottom: 25px;">
+        <label style="display: block; font-weight: 900; margin-bottom: 10px;">AGREED PRICE ($)</label>
         <%= f.number_field :agreed_price, value: @conversation.item.price, 
-            style: "width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 16px; box-sizing: border-box;" %>
+            style: "width: 100%; border: 3px solid black; padding: 15px; font-size: 20px; font-weight: bold; box-sizing: border-box;" %>
       </div>
 
-      <div style="display: flex; gap: 12px; justify-content: flex-end;">
-        <button type="button" style="background: none; border: none; color: var(--text-muted); cursor: pointer;" onclick="document.getElementById('propose-modal').style.display='none'">Cancel</button>
-        <%= f.submit "Send Offer", class: "btn-action" %>
+      <div style="display: flex; gap: 10px;">
+        <%= f.submit "SEND PROPOSAL", class: "btn-brutal", style: "flex: 2; background: #28a745; color: white; padding: 15px;" %>
+        <button type="button" class="btn-brutal" style="flex: 1; background: #eee;" onclick="document.getElementById('propose-modal').style.display='none'">CANCEL</button>
       </div>
     <% end %>
   </div>
@@ -246,7 +135,7 @@
     if (chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 
-  // Run on initial load and after Turbo navigation
+  // Auto-scroll on load
   scrollToBottom();
 
   // Auto-scroll whenever a new message is added via Turbo Stream

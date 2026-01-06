@@ -17,6 +17,7 @@ class Deal < ApplicationRecord
     def all_parties_confirmed?
         buyer_marked_done && seller_marked_done && (saved_change_to_buyer_marked_done? || saved_change_to_seller_marked_done?)
     end
+    
     def mark_item_as_sold   
     item.sold!
 
