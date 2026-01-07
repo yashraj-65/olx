@@ -62,3 +62,5 @@ gem "actioncable"
 
 # The messenger that handles the socket traffic
 gem "redis", "~> 4.0"
+gem "doorkeeper", "~> 5.8"
+gem 'kaminari'

@@ -257,11 +257,19 @@
   <div class="conversations-panel">
     <div class="panel-header">
       <h1>Chats</h1>
+      <div class="search-wrapper" style="width: 100%; background: var(--secondary); border-radius: 20px; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+      <span style="color: var(--muted);">🔍</span>
+      <input type="text" 
+             id="convo-search" 
+             placeholder="Search Messenger" 
+             style="border: none; background: transparent; outline: none; width: 100%; font-size: 15px;">
+    </div>
     </div>
     
     <div class="convo-list">
       <% @conversations.each do |convo| %>
-        <div class="convo-item <%= 'active-chat' if @conversation == convo %>">
+<div class="convo-item <%= 'active-chat' if @conversation == convo %>" 
+           data-search-key="<%= convo.item.title.downcase %> <%= convo.seller_profile.userable.name.downcase %>">
           <%= link_to conversation_path(convo), class: "convo-link" do %>
             <div class="avatar-circle">
               <%= convo.seller_profile.userable.name[0].upcase %>
@@ -318,3 +326,24 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('convo-search');
+    const convoItems = document.querySelectorAll('.convo-item');
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+
+      convoItems.forEach(item => {
+        const searchKey = item.getAttribute('data-search-key');
+        
+        if (searchKey.includes(query)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

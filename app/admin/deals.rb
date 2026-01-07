@@ -20,7 +20,7 @@ ActiveAdmin.register Deal do
      Deal.where(id: ids).update_all(status: status_value)
      redirect_to collection_path, notice: "Selected deals updated to #{inputs[:status]}"
    end
-
+   scope :all
    scope "seler marked done" do |deals|
     deals.where(seller_marked_done: true)
    end

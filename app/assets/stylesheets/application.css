@@ -318,3 +318,62 @@
   opacity: 1;
   color: #febd69;
 }
+/* Container for the whole pagination section */
+.pagination-container {
+  margin-top: 30px;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+/* Styling the 'Displaying items 1-10 of 50' text */
+.page-entries-info {
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Kaminari Nav Links styling */
+.pagination {
+  display: inline-flex;
+  gap: 5px;
+  list-style: none;
+}
+
+.pagination span, .pagination a {
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+/* The page the user is currently on */
+.pagination .current {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+.pagination a:hover {
+  background-color: #f8f9fa;
+  border-color: #bbb;
+}
+
+/* Item card styling */
+.item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}

@@ -1,9 +1,9 @@
 class Buyer < ApplicationRecord
     belongs_to :userable, polymorphic: true
      has_many :conversations
-   has_many :deals, through: :conversations, source: :deals
-    has_many :likes, dependent: :destroy
-    has_many :reviews, foreign_key: :reviewer_id
+     has_many :deals, through: :conversations, source: :deals
+     has_many :likes, dependent: :destroy
+     has_many :reviews, foreign_key: :reviewer_id
    
 
        def refresh_stats!

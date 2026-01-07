@@ -10,16 +10,21 @@ class ConversationsController < ApplicationController
 
         redirect_to conversation_path(@conversation)
     end
+    
     def index
         @conversations = Conversation.where("buyer_id=? OR seller_id=?",current_user.buyer&.id,current_user.seller&.id).compact
     end
 
 
-def show
-  @conversation = Conversation.find(params[:id])
-  @conversations = Conversation.where(buyer: current_user).or(Conversation.where(seller: current_user))
-  @messages = @conversation.messages.includes(:user) # Solve N+1 for messages!
+  def show
+  allowed_conversations = Conversation.where("buyer_id = ? OR seller_id = ?", current_user.id, current_user.id)
+  @conversation = allowed_conversations.find(params[:id])
+  @conversations = allowed_conversations
+  @messages = @conversation.messages.includes(:user)
   @message = Message.new
-end
-  
-end
+
+    rescue ActiveRecord::RecordNotFound
+    redirect_to conversations_path, alert: "You do not have access to that conversation."
+   end
+    
+    end

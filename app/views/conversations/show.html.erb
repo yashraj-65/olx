@@ -1,5 +1,46 @@
 <%# CSS for the Modal and Stacking %>
 <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Vital: Keeps the browser from scrolling */
+    background: #f0f0f0;
+  }
+
+  /* Main Wrapper: Full Screen */
+  .chat-wrapper {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    padding-top: 1px;
+    box-sizing: border-box;
+  }
+
+  .card-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border: 4px solid black;
+    background: white;
+    box-shadow: 10px 10px 0px black;
+    overflow: hidden;
+  }
+
+  /* The Scrollable Part */
+  #chat-window {
+    flex: 1; /* This takes up all available space between header and footer */
+    overflow-y: auto;
+    background-color: #f0f0f0;
+    background-image: radial-gradient(black 1px, transparent 0);
+    background-size: 20px 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  /* Modal Overlay: Must be outside the main container flow */
   .modal-overlay {
     display: none; 
     position: fixed;
@@ -8,7 +49,7 @@
     height: 100vh;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(2px);
-    z-index: 99999;
+    z-index: 9999;
     justify-content: center;
     align-items: center;
   }
@@ -22,18 +63,6 @@
     max-width: 450px;
     position: relative;
   }
-
-  /* Default: White box on the left */
-  .message-row[data-sender-id="<%= current_user.id %>"] {
-    justify-content: flex-end !important;
-  }
-
-  .message-row[data-sender-id="<%= current_user.id %>"] .message-box {
-    background: #000 !important;
-    color: #fff !important;
-    box-shadow: -4px 4px 0px #888 !important;
-  }
-
 
   .btn-brutal {
     border: 3px solid black;
@@ -53,12 +82,11 @@
   }
 </style>
 
-<div class="chat-wrapper" style="height: calc(100vh - 100px); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;">
-  
-  <div class="card-container" style="display: flex; flex-direction: column; height: 100%; border: 4px solid black; background: white; box-shadow: 10px 10px 0px black;">
+<div class="chat-wrapper">
+  <div class="card-container">
     
     <%# Header Section %>
-    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 4px solid black;">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 4px solid black; background: white; flex-shrink: 0;">
       <div style="display: flex; align-items: center;">
         <div class="img-avatar" style="width: 45px; height: 45px; border: 3px solid black; background: #ffde03; margin-right: 15px;"></div>
         <div class="text-chat">
@@ -76,20 +104,15 @@
     </div>
 
     <%# Messages Body %>
-    <div id="chat-window" class="card-body" style="flex-grow: 1; overflow-y: auto; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-      
-      <%# --- REAL-TIME LISTENER --- %>
+    <div id="chat-window">
       <%= turbo_stream_from @conversation %>
-
-      <%# --- MESSAGES TARGET CONTAINER --- %>
       <div id="messages_list" style="display: flex; flex-direction: column; gap: 15px;">
         <%= render @messages %>
       </div>
     </div>
 
     <%# Input Section %>
-    <div class="message-input" style="padding: 20px; background: white; border-top: 4px solid black;">
-      <%# Added data: { turbo_action: "replace" } to help clear the form %>
+    <div class="message-input" style="padding: 20px; background: white; border-top: 4px solid black; flex-shrink: 0;">
       <%= form_with(model: [@conversation, @message], id: "message_form", style: "display: flex; gap: 10px;") do |f| %>
         <%= f.text_field :body, 
             placeholder: "Type your message...", 
@@ -105,13 +128,13 @@
 </div>
 
 <%# THE MODAL %>
-<div id="propose-modal" class="modal-overlay">
+<div id="propose-modal" class="modal-overlay" onclick="if(event.target == this) this.style.display='none'">
   <div class="modal-card">
     <button type="button" 
             style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 30px; font-weight: bold; cursor: pointer;" 
             onclick="document.getElementById('propose-modal').style.display='none'">&times;</button>
     
-    <h2 style="margin: 0 0 10px 0; text-transform: uppercase;">New Proposal</h2>
+    <h2 style="margin: 0 0 10px 0; text-transform: uppercase; font-weight: 900;">New Proposal</h2>
     <p style="margin-bottom: 25px; color: #666;">Set the final price for <strong><%= @conversation.item.title %></strong>.</p>
 
     <%= form_with(model: [@conversation, Deal.new], local: true) do |f| %>
@@ -128,25 +151,3 @@
     <% end %>
   </div>
 </div>
-
-<script>
-  function scrollToBottom() {
-    const chatWindow = document.getElementById('chat-window');
-    if (chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  // Auto-scroll on load
-  scrollToBottom();
-
-  // Auto-scroll whenever a new message is added via Turbo Stream
-  document.addEventListener("turbo:before-stream-render", function() {
-    setTimeout(scrollToBottom, 50);
-  });
-
-  // Clear the form after sending (if not using create.turbo_stream.erb)
-  document.getElementById("message_form").addEventListener("turbo:submit-end", (event) => {
-    if (event.detail.success) {
-      event.target.reset();
-    }
-  });
-</script>

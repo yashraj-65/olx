@@ -6,6 +6,15 @@ ActiveAdmin.register Conversation do
   # Uncomment all parameters which should be permitted for assignment
   #
    permit_params :item_id, :buyer_id, :seller_id
+   filter :item
+  filter :buyer_profile, 
+       label: "Buyer Name",
+       as: :select, 
+       collection: proc { 
+         Buyer.includes(:userable).map { |bp| [bp.userable&.name, bp.id] } 
+       }
+   filter :seller_profile
+    filter :deals, label: "Associated Deals", collection: proc { Deal.all.map { |d| ["Deal ##{d.id}", d.id] } }
    index do
     selectable_column
     id_column

@@ -9,3 +9,30 @@
     </div>
   </div>
 </div>
+
+<script>
+  function scrollToBottom() {
+    const chatWindow = document.getElementById('chat-window');
+    if (chatWindow) {
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+  }
+
+  // 1. Scroll when you first open the page
+  document.addEventListener("turbo:load", scrollToBottom);
+
+  // 2. Clear input after YOU send a message
+  document.addEventListener("turbo:submit-end", function(event) {
+    const messageForm = document.getElementById("message_form");
+    if (event.target === messageForm && event.detail.success) {
+      messageForm.reset();
+      setTimeout(scrollToBottom, 50); // Small delay to let the message render
+    }
+  });
+
+  // 3. Scroll when a message arrives via real-time (Turbo Stream)
+  // This listener catches the broadcast from the other user
+  document.addEventListener("turbo:before-stream-render", function() {
+    setTimeout(scrollToBottom, 50);
+  });
+</script>

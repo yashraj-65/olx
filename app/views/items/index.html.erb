@@ -1,16 +1,16 @@
-<style>
-  .item
-  {
-  border-radius: ;
-  }
-</style>
 <div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
   <% @items.each do |item| %>
-  <% unless item.seller.userable == current_user %>
-  <div class="item">
-        <%= render partial: "item", locals: { item: item } %>
-  </div>
-  <%end%>
-
+    <div class="item">
+      <%= render partial: "item", locals: { item: item } %>
+    </div>
   <% end %>
+</div>
+
+<div class="pagination-container">
+  <div class="page-entries-info">
+    <%= page_entries_info @items %>
+  </div>
+  <nav class="pagination">
+    <%= paginate @items %>
+  </nav>
 </div>
