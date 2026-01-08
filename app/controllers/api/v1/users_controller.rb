@@ -13,7 +13,7 @@ module Api
                 items: { only: [:id, :title, :price, :status] }
               }
             },
-            # 2. Get information about them as a buyer
+
             buyer: {
               only: [:id, :purchase_count, :total_spent]
             }

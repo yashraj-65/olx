@@ -253,29 +253,42 @@
   backdrop-filter: blur(10px);
   padding: 15px 0;
   border-bottom: 1px solid var(--card-border);
+  
 }
 
 .search-form {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
+ 
+  display: flex;
+  justify-content: center;
 }
-
 .search-input-group {
   display: flex;
-  background: white; /* Keep input white for readability */
-  border-radius: 4px;
-  overflow: hidden;
-  border: 2px solid #febd69; /* Match your Sell button */
+  align-items: stretch; /* This is the key for equal height */
+  height: 45px;         /* Set a fixed height for the whole bar */
+  background: white;
+  border: 2px solid #febd69;
+  border-radius: 10px;
+  overflow: hidden;    /* Clips the sharp corners of the dropdown to the 10px radius */
 }
+.category-select{
+    position: relative;
+  display: flex;
+  height:100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+}
 .cat-dropdown {
-  background: #f3f3f3;
+  background-color: #e7e2e2;
+  color: #212121;
+  padding: 0px 15px;
+  font-size: 15px;
+  font-weight: bold;
   border: none;
-  border-right: 1px solid #ddd;
-  padding: 0 15px;
-  font-size: 0.85rem;
-  outline: none;
+  border-radius: 0;
+  height: 100%; /* Let the container handle the rounding */
   cursor: pointer;
 }
 
@@ -292,6 +305,7 @@
   border: none;
   padding: 0 25px;
   cursor: pointer;
+  height: 100%;
   transition: background 0.2s;
 }
 
@@ -366,10 +380,13 @@
 
 /* Item card styling */
 .item {
-  border: 1px solid #e0e0e0;
+  display: flex;          /* 1. Enable Flexbox */
+  justify-content: center; /* 2. Center horizontally */
+  align-items: center;
+  border: 1px solid #7b88c9;
   border-radius: 8px;
   padding: 15px;
-  background: white;
+  background: rgb(213, 216, 181);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 

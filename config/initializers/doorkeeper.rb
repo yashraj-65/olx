@@ -13,8 +13,11 @@ Doorkeeper.configure do
     #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   end
 
+admin_authenticator do
+  current_user || warden.authenticate!(scope: :user)
+end
 
-  
+  grant_flows %w[authorization_code client_credentials]
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
@@ -215,7 +218,12 @@ Doorkeeper.configure do
   # When the above option is enabled, and a hashed token or secret is not found,
   # you can allow to fall back to another strategy. For users upgrading
   # doorkeeper and wishing to enable hashing, you will probably want to enable
-  # the fallback to plain tokens.
+  # the fallback127.0.0.1 at 2026-01-08 11:37:00 +0530
+default_scopes  :public
+
+  # These are extra ones you might use later
+  optional_scopes :read, :write
+ 
   #
   # This will ensure that old access tokens and secrets
   # will remain valid even if the hashing above is enabled.

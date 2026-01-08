@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  # use_doorkeeper
+  use_doorkeeper
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   devise_for :users
@@ -39,9 +39,13 @@ resources :likes
 
 namespace :api, defaults: { format: :json } do
   namespace :v1 do
-    resources :items, only: [:index, :show]
+    resources :items, only: [:index, :show, :destroy, :update, :create]
     resources :users, only: [:index, :show]
-    resources :deals, only: [:index]
+    resources :deals, only: [:index, :show] do
+    member do
+      patch :mark_sold
+    end
+  end
   end
 end
 

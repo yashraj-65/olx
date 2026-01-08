@@ -37,7 +37,7 @@ ActiveAdmin.register Deal do
    filter :status, as: :select, collection: [["Success", 1], ["Failed", 0]]
    filter :seller_marked_done
    filter :proposer_name_cont, as: :string, label: "Proposer Name"
-   
+   filter :item
    filter :proposer_id_eq, as: :string, label: "Proposer ID"
    index do
     selectable_column
