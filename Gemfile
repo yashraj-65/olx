@@ -64,3 +64,4 @@ gem "actioncable"
 gem "redis", "~> 4.0"
 gem "doorkeeper", "~> 5.8"
 gem 'kaminari'
+gem 'rabl'

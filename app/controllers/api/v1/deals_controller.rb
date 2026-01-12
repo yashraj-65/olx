@@ -49,9 +49,9 @@ module Api
             end
             
 
-            def deal_params
-                
-            end
+      def item_params
+        params.require(:deal).permit(:agreed_price, :status, :seller_marked_done, :buyer_marked_done, :condition, :color,:image, category_ids: [])
+      end
         end
     end
 end

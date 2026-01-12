@@ -42,10 +42,13 @@ namespace :api, defaults: { format: :json } do
     resources :items, only: [:index, :show, :destroy, :update, :create]
     resources :users, only: [:index, :show]
     resources :deals, only: [:index, :show] do
-    member do
-      patch :mark_sold
+        member do
+          patch :mark_sold
+        end
     end
-  end
+    resources :reviews, only: [:index, :show, :destroy]
+    resources :likes, only: [:index, :show, :destroy, :create]
+    resources :conversations, only: [:index, :show]
   end
 end
 
