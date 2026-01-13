@@ -13,12 +13,25 @@ Doorkeeper.configure do
     #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   end
 
+    resource_owner_from_credentials do |routes|
+    user = User.find_for_database_authentication(email: params[:username])
+    if user && user.valid_password?(params[:password])
+      user
+    else
+      nil
+    end
+  end
 admin_authenticator do
   current_user || warden.authenticate!(scope: :user)
 end
 
-  grant_flows %w[authorization_code client_credentials]
+grant_flows %w[authorization_code password client_credentials]
 
+default_scopes  :public
+  optional_scopes :read, :write
+
+  # Allow blank redirect URI for password grant
+  allow_blank_redirect_uri true
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
@@ -219,10 +232,7 @@ end
   # you can allow to fall back to another strategy. For users upgrading
   # doorkeeper and wishing to enable hashing, you will probably want to enable
   # the fallback127.0.0.1 at 2026-01-08 11:37:00 +0530
-default_scopes  :public
 
-  # These are extra ones you might use later
-  optional_scopes :read, :write
  
   #
   # This will ensure that old access tokens and secrets
@@ -537,4 +547,6 @@ default_scopes  :public
   # WWW-Authenticate Realm (default: "Doorkeeper").
   #
   # realm "Doorkeeper"
+
+  reuse_access_token
 end

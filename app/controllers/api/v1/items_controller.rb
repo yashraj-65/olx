@@ -2,36 +2,19 @@ module Api
   module V1
     class ItemsController < BaseController
       def index
-        @items = Item.all
-        render json: @items.as_json(
-          only: [:id, :title, :price, :status, :condition],
-          include: { 
-            seller: { 
-              only: [:id, :avg_rating], 
-              include: { 
-                userable: { only: [:name, :email] } 
-              } 
-            } 
-          }
-        )
+        @items = Item.includes(seller: :userable).all
+
       end
 
       def show
         @item = Item.find(params[:id])
-        render json: @item.as_json(
-          only: [:id, :title, :price, :desc, :condition],
-          include: { 
-            seller: { 
-              include: { userable: { only: [:name] } } 
-            } 
-          }
-        )
+
       end
       def update
           @item = Item.find(params[:id])
-          if @item.seller_id == current_user.id
+          if @item.seller_id == current_user.seller&.id
               if @item.update(item_params)
-                render json: {message: "Item updated successfully", item: @item }, status: :ok
+                render :show, status: :ok
               else
                render json: { errors: @item.errors.full_messages }, status: :unprocessable_entity
               end
@@ -41,16 +24,16 @@ module Api
       end
         def create
           @item=Item.new(item_params)
-          @item.seller_id=current_user.id
+          @item.seller_id=current_user.seller&.id
           if @item.save
-            render json: {message: "succesfully created item", item: @item}, status: :ok
+            render :show, status: :ok
           else
             render json: {errors: @item.errors.full_messages}, status: :unprocessable_entity
           end
         end
       def destroy
         @item=Item.find(params[:id])
-        if @item.seller_id==current_user.id
+        if @item.seller_id==current_user.seller&.id
           @item.destroy
           render json: {message: "Item destroyed succefully"}, status: :ok
         else

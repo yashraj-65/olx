@@ -2,30 +2,16 @@ module Api
     module V1
         class DealsController < BaseController
             def index
-            @deals=Deal.all
-            render json: @deals.as_json(
-                only: [:id,:agreed_price,:seller_marked_done,:buyer_marked_done],
-                include: {
-                    item: {
-                        only: [:id, :title, :status]
-                    }
-                }
-            )
+            @deals=Deal.includes(:item,{buyer: :userable},{seller: :userable}).all
+
             end
             def show
                 @deal=Deal.find(params[:id])
-                render json: @deal.as_json(
-                    only: [:id, :agreed_price,:seller_marked_done,:buyer_marked_done],
-                    include: {
-                        item: {
-                            only: [:id, :title, :status]
-                        }
-                    }
-                )
+                
             end
             def mark_sold
                 @deal =Deal.find(params[:id])
-                if @deal.seller.id = current_user.id
+                if @deal.seller.id == current_user.id
                     @deal.update(seller_marked_done: true)
                     render json: {message: "seller confirmed", deal: @deal}
                 elsif @deal.buyer.id=current_user.id

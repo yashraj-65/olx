@@ -3,16 +3,8 @@ module Api
         class LikesController < BaseController
                 before_action :doorkeeper_authorize!
             def index 
-                @likes = Like.includes(:buyer, :likeable).all
+                @likes = Like.includes({buyer: :userable}, :likeable).all
 
-                render json: @likes.as_json(
-                    only: [:id,:likeable_type, :likeable_id],
-                    include: {
-                        buyer: {
-                            only: [:id,:total_spent]
-                        }
-                    }
-                )
             end
             def  create
                 @like = Like.new(like_params)

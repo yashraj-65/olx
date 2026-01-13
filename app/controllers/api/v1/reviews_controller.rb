@@ -6,18 +6,7 @@ module Api
 
 
             def index
-                @reviews=Review.includes(:seller, :deal).all
-                render json: @reviews.as_json(
-                only: [:id, :comment, :rating, :seller_id, :reviewer_id],
-                include: {
-                    deal: {
-                    only: [:id, :agreed_price]
-                    },
-                    seller: {
-                    only: [:id, :avg_rating, :contact_number]
-                    }
-                }
-                )
+                @reviews=Review.includes({seller: :userable}, :deal).all
             end
 
 
