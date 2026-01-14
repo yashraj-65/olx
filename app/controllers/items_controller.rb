@@ -3,11 +3,11 @@ class ItemsController < ApplicationController
 
 
     def index
-    @items = Item.filter_by_category(params[:category]).page(params[:page]).per(10)
+    @items = Item.filter_by_category(params[:category]).page(params[:page]).per(6)
     if params[:query].present?
         @items = @items.search_by_query(params[:query]).page(params[:page]).per(10)
     end
-    @items = @items.with_attached_image.includes(seller: :userable).page(params[:page]).per(10)
+    @items = @items.with_attached_image.includes(seller: :userable).page(params[:page]).per(6)
 
     end
 

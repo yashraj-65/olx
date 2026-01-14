@@ -5,8 +5,11 @@ class Item < ApplicationRecord
     has_many :deals
     has_many :likes, as: :likeable, dependent: :destroy
     has_many :conversations, dependent: :destroy
-    enum status: {pending: 0, available: 1,sold: 2}
-    enum condition: {brand_new: 0, small_defect: 1, damaged: 2}
+    enum status: { pending: 0, available: 1, sold: 2 }
+    enum :condition, condition: {brand_new: 0, small_defect: 1, damaged: 2}
+    validates :title, presence: true
+    validates :price, presence: true, numericality: {greater_than: 0}
+    validates :desc, presence: true, length: { minimum: 11 }
     before_create :set_default_status
 
     scope :filter_by_category, -> (cat_id) {

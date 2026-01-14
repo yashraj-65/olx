@@ -65,3 +65,9 @@ gem "redis", "~> 4.0"
 gem "doorkeeper", "~> 5.8"
 gem 'kaminari'
 gem 'rabl'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 8.0.0'
+  gem 'factory_bot_rails'
+end
+gem 'simplecov', require: false, group: :test
