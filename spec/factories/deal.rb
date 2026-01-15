@@ -4,7 +4,8 @@ FactoryBot.define do
         status { :success }
         seller_marked_done { true }
         buyer_marked_done {true}
-        association :item, :conversation
+        association :item
+        association :conversation
         association :proposer, factory: :user
     end
 end

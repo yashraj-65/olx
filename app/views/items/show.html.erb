@@ -25,7 +25,7 @@
         <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px;">Item Details</h3>
         
         <p style="margin: 10px 0;"><strong>Status:</strong> <span style="color: #666;"><%= @item.status&.titleize %></span></p>
-        <p style="margin: 10px 0;"><strong>Condition:</strong> <span style="color: #666;"><%= @item.condition.titleize %></span></p>
+        <p style="margin: 10px 0;"><strong>Condition:</strong> <span style="color: #666;"><%= @item.condition&.titleize %></span></p>
         <p style="margin: 10px 0;"><strong>Color:</strong> <span style="color: #666;"><%= @item.color %></span></p>
         <p style="margin: 10px 0;"><strong>Warranty:</strong> <span style="color: #666;"><%= @item.warranty %></span></p>
         <p style="margin: 10px 0;"><strong>Negotiable:</strong> <span style="color: #666;"><%= @item.is_negotiable? ? 'Yes' : 'No' %></span></p>

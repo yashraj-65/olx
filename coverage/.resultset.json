@@ -2346,8 +2346,8 @@
           1,
           null,
           1,
-          0,
-          0,
+          1,
+          1,
           null,
           null,
           1,
@@ -2360,8 +2360,48 @@
           null,
           null
         ]
+      },
+      "/home/yaswanth.rajeev/final-project/olx/app/controllers/api/v1/users_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "/home/yaswanth.rajeev/final-project/olx/app/controllers/api/v1/base_controller.rb": {
+        "lines": [
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          null,
+          1,
+          0,
+          null,
+          null,
+          null,
+          null
+        ]
       }
     },
-    "timestamp": 1768394281
+    "timestamp": 1768480777
   }
 }
