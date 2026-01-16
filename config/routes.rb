@@ -40,7 +40,7 @@ resources :likes
 namespace :api, defaults: { format: :json } do
   namespace :v1 do
     resources :items, only: [:index, :show, :destroy, :update, :create]
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :show, :create,:update]
     resources :deals, only: [:index, :show] do
         member do
           patch :mark_sold
@@ -48,7 +48,8 @@ namespace :api, defaults: { format: :json } do
     end
     resources :reviews, only: [:index, :show, :destroy]
     resources :likes, only: [:index, :show, :destroy, :create]
-    resources :conversations, only: [:index, :show]
+    resources :conversations, only: [:index, :show,:update]
+    resources :sellers, only: [:index, :show, :update]
   end
 end
 
