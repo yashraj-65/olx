@@ -40,7 +40,7 @@ resources :likes
 namespace :api, defaults: { format: :json } do
   namespace :v1 do
     resources :items, only: [:index, :show, :destroy, :update, :create]
-    resources :users, only: [:index, :show, :create,:update]
+    resources :users, only: [:index, :show, :create,:update, :destroy]
     resources :deals, only: [:index, :show] do
         member do
           patch :mark_sold

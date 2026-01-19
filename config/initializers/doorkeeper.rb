@@ -13,14 +13,24 @@ Doorkeeper.configure do
     #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   end
 
-    resource_owner_from_credentials do |routes|
-    user = User.find_for_database_authentication(email: params[:username])
-    if user && user.valid_password?(params[:password])
+# config/initializers/doorkeeper.rb
+# config/initializers/doorkeeper.rb
+resource_owner_from_credentials do |routes|
+  # 1. Try to find an AdminUser
+  admin = AdminUser.find_by(email: params[:username])
+  
+  if admin&.valid_password?(params[:password])
+    admin # Just mention the variable, do not use 'return'
+  else
+    # 2. If no admin, try to find a normal User
+    user = User.find_by(email: params[:username])
+    if user&.valid_password?(params[:password])
       user
     else
-      nil
+      nil # This signals a 400 error to Doorkeeper
     end
   end
+end
 admin_authenticator do
   current_user || warden.authenticate!(scope: :user)
 end
@@ -28,7 +38,7 @@ end
 grant_flows %w[authorization_code password client_credentials]
 
 default_scopes  :public
-  optional_scopes :read, :write
+  optional_scopes :read, :write, :admin 
 
   # Allow blank redirect URI for password grant
   allow_blank_redirect_uri true
@@ -76,7 +86,7 @@ default_scopes  :public
   #     destroy
   #   end
   # end
-
+use_polymorphic_resource_owner
   # Enables polymorphic Resource Owner association for Access Tokens and Access Grants.
   # By default this option is disabled.
   #
@@ -92,7 +102,7 @@ default_scopes  :public
   # update `resource_owner_type` column in the database and fix migration template as it will
   # set NOT NULL constraint for Access Grants table.
   #
-  # use_polymorphic_resource_owner
+  use_polymorphic_resource_owner
 
   # If you are planning to use Doorkeeper in Rails 5 API-only application, then you might
   # want to use API mode that will skip all the views management and change the way how

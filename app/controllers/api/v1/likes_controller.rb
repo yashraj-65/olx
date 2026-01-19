@@ -4,8 +4,8 @@ module Api
                 before_action :doorkeeper_authorize!
             def index 
                 @likes = Like.includes({buyer: :userable}, :likeable).all
-
             end
+            
             def  create
                 @like = Like.new(like_params)
                 @like.buyer = current_user.buyer
@@ -16,9 +16,8 @@ module Api
                 end
             end
 
-
             def like_params
-            params.require(:like).permit(:likeable_id, :likeable_type)
+                params.require(:like).permit(:likeable_id, :likeable_type)
             end
 
         end

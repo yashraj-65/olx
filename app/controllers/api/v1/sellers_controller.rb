@@ -22,14 +22,17 @@ module Api
                     end
                     def update
                         @seller = Seller.find(params[:id])
-                        if @seller.userable = current_user
+                        is_admin = current_user.is_a?(AdminUser)
+is_owner = (@seller.userable_id == current_user.id && @seller.userable_type == current_user.class.name)
+                        if is_admin || is_owner
                             if @seller.update(edit_params)
-                                    render json: { message: "Seller updated successfully", seller: @seller }, status: :ok
+                            render json: { message: "Update successful", seller: @seller }, status: :ok
                             else
-                                render json: {errors: @seller.errors.full_messages},status: :unprocessable_entity
+                            render json: { errors: @seller.errors.full_messages }, status: :unprocessable_entity
                             end
                         else
-                                      render json: {error:"not authorised"},status: :forbidden
+                            # 403 Forbidden: Neither an Admin nor the Owner
+                            render json: { error: "not authorised" }, status: :forbidden
                         end
                     end
 

@@ -26,21 +26,21 @@ module Api
           @item=Item.new(item_params)
           @item.seller_id=current_user.seller&.id
           if @item.save
-            render :show, status: :ok
+            render :show, status: :created
           else
             render json: {errors: @item.errors.full_messages}, status: :unprocessable_entity
           end
         end
       def destroy
         @item=Item.find(params[:id])
-     if  @item.seller_id == current_user.seller&.id
+        if  @item.seller_id == current_user.seller&.id
           @item.destroy
           render json: {message: "Item destroyed succefully"}, status: :ok
         else
           render json: {error: "You are not authorized  to delete" }, status: :forbidden
         end
       end
-
+private
       def item_params
         params.require(:item).permit(:title, :desc, :price, :status, :condition, :color,:image, category_ids: [])
       end
