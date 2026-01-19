@@ -37,20 +37,25 @@ end
 resources :sellers
 resources :likes
 
-namespace :api, defaults: { format: :json } do
-  namespace :v1 do
-    resources :items, only: [:index, :show, :destroy, :update, :create]
-    resources :users, only: [:index, :show, :create,:update, :destroy]
-    resources :deals, only: [:index, :show] do
-        member do
-          patch :mark_sold
-        end
-    end
-    resources :reviews, only: [:index, :show, :destroy]
-    resources :likes, only: [:index, :show, :destroy, :create]
-    resources :conversations, only: [:index, :show,:update]
-    resources :sellers, only: [:index, :show, :update]
+  namespace :api, defaults: { format: :json } do
+      namespace :v1 do
+          resources :items, only: [:index, :show, :destroy, :update, :create] do
+              collection do
+                  get :search_by_query
+                  get :search_by_category
+              end
+          end
+        resources :users, only: [:index, :show, :create,:update, :destroy]
+          resources :deals, only: [:index, :show] do
+                member do
+                  patch :mark_sold
+                end
+          end
+        resources :reviews, only: [:index, :show, :destroy,:create]
+        resources :likes, only: [:index, :show, :destroy, :create]
+        resources :conversations, only: [:index, :show,:update]
+        resources :sellers, only: [:index, :show, :update]
+      end
   end
-end
 
 end

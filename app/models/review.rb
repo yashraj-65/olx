@@ -7,6 +7,7 @@ class Review < ApplicationRecord
                        less_than_or_equal_to: 5,
                        greater_than_or_equal_to: 1
                      }
+    after_commit  :update_seller_rating, on: [:create,:destroy, :update]
 
     def self.ransackable_attributes(auth_object = nil)      
       ["id", "comment", "rating"]
@@ -15,5 +16,11 @@ class Review < ApplicationRecord
     def self.ransackable_associations(auth_object = nil)
       ["seller", "deals"]
     end
+    private
+
+  def update_seller_rating
+     new_average = seller.reviews.average(:rating).to_f.round(2)
+     seller.update(avg_rating: new_average)
+end
     
 end

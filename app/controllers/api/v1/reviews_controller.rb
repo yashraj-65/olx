@@ -31,9 +31,27 @@ module Api
                     @review.destroy
                     render json: {message: "Review deleted"},status: :ok
                 else
-                    render json: {error: "cant delete review"},status: :unprocessable_entity
+                    render json: {error: "cant delete review"},status: :forbidden
                 end
             end
+
+            def create
+            @review = Review.new(review_params)
+            @review.reviewer_id = current_user.id
+
+            if @review.save
+            render json: @review.as_json(include: [:deal, :seller]), status: :created
+            else
+            render json: { errors: @review.errors.full_messages }, status: :unprocessable_entity
+            end
+        end
+
+
+        private
+
+        def review_params
+            params.require(:review).permit(:comment, :rating)
+        end
 
 
         end

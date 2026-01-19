@@ -20,7 +20,12 @@ class Item < ApplicationRecord
 
       query
     }
-    scope :search_by_query, -> (query) { where('title ILIKE ? OR items."desc" ILIKE ?', "%#{query}%", "%#{query}%") if query.present? }
+    scope :search_by_query, -> (query) { 
+      if query.present?
+        search_term = "%#{query}%"
+        where('items.title ILIKE :q OR items.desc ILIKE :q', q: search_term) 
+      end
+    }
     private
 
     def set_default_status

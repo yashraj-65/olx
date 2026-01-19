@@ -7,7 +7,7 @@ class Deal < ApplicationRecord
     belongs_to :proposer, class_name: "User", foreign_key: :proposer_id
     has_many :reviews
     def respondent
-    proposer == buyer ? seller : buyer
+    proposer_id == buyer.userable_id ? seller : buyer
     end
 
     after_update :mark_item_as_sold, if: :all_parties_confirmed?

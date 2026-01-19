@@ -14,11 +14,11 @@ module Api
                 if @deal.seller.id == current_user.id
                     @deal.update(seller_marked_done: true)
                     render json: {message: "seller confirmed", deal: @deal}
-                elsif @deal.buyer.id=current_user.id
+                elsif @deal.buyer.id==current_user.id
                     @deal.update(buyer_marked_done: true)
                     render json: {message: "seller confirmed", deal: @deal}
                 else
-                   render json: {message: "user not part of deal", status: :forbidden}
+                   render json: {message: "user not part of deal"}, status: :forbidden
                 end
 
             end

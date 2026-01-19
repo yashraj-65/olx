@@ -14,16 +14,16 @@ class ReviewsController < ApplicationController
             redirect_to item_path(@deal.item), alert:"deal failed!!!!"
         end
     end
-def destroy
-  @review = Review.find(params[:id])
-  
-  if @review.reviewer == current_user.buyer
-    @review.destroy
-    redirect_back fallback_location: root_path, notice: "Review deleted."
-  else
-    redirect_back fallback_location: root_path, alert: "Not authorized."
-  end
-end
+    def destroy
+    @review = Review.find(params[:id])
+    
+    if @review.reviewer == current_user.buyer
+        @review.destroy
+        redirect_back fallback_location: root_path, notice: "Review deleted."
+    else
+        redirect_back fallback_location: root_path, alert: "Not authorized."
+    end
+    end
     private
 
   

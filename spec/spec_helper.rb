@@ -15,11 +15,16 @@
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'simplecov'
-SimpleCov.start do
-  # You can add configuration here later
-  add_filter '/spec/' # Ignore your test files in the coverage report
+SimpleCov.start 'rails' do
+  add_group "Models", "app/models"
+  add_group "Controllers", "app/controllers"
+  add_group "Helpers", "app/helpers"
+  add_group "Mailers", "app/mailers"
+  add_group "Admin", "app/admin"
+  add_group "Initializers", "config/initializers"
+  add_filter '/spec/' 
+  add_filter "/config/"
 end
-
 # ... your existing test setup code ...
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

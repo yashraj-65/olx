@@ -28,4 +28,14 @@ RSpec.describe Buyer, type: :model do
         expect(association.options[:foreign_key]).to eq(:reviewer_id)
         end
     end
+    describe "ransackable attributes" do 
+        it "allows ransackable attributes" do
+            expected_attributes =   ["created_at", "id", "purchase_count", "total_spent", "updated_at", "userable_id", "userable_type"]
+            expect(Buyer.ransackable_attributes).to match_array(expected_attributes)
+        end
+         it "allows ransackable associations" do
+            expected_associations =      ["userable", "items", "likes","reviews"]
+            expect(Buyer.ransackable_associations).to match_array(expected_associations)
+        end
+    end
 end

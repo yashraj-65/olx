@@ -40,6 +40,19 @@ module Api
           render json: {error: "You are not authorized  to delete" }, status: :forbidden
         end
       end
+
+    def search_by_query
+        @items = Item.includes(seller: :userable)
+                     .search_by_query(params[:query])
+        
+        render :index 
+    end
+
+    def search_by_category
+              @items = Item.includes(seller: :userable)
+                     .filter_by_category(params[:category_id])
+                     render :index 
+    end
 private
       def item_params
         params.require(:item).permit(:title, :desc, :price, :status, :condition, :color,:image, category_ids: [])

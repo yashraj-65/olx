@@ -4,7 +4,6 @@ module Api
       skip_before_action :doorkeeper_authorize!, only: [:create]
       def index
         @users = User.all
-
       end
 
       def show
@@ -33,8 +32,6 @@ module Api
       end
 
     def destroy
-
-      
       @user_to_delete = User.find(params[:id])
 
       if current_user.is_a?(AdminUser) 
