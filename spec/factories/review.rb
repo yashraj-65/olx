@@ -4,5 +4,6 @@ FactoryBot.define do
     
     association :deal 
     association :seller
+    association :reviewer, factory: :buyer
   end
 end

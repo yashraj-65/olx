@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-
+require 'faker'
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2.0"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
@@ -69,6 +69,7 @@ gem 'rabl'
 group :development, :test do
   gem 'rspec-rails', '~> 8.0.0'
   gem 'factory_bot_rails'
+  gem 'faker'
 end
 gem 'simplecov', require: false, group: :test
 

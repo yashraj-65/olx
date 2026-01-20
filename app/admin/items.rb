@@ -2,7 +2,6 @@ ActiveAdmin.register Item do
   permit_params :title, :desc, :status, :warranty, :color, :price, 
                 :condition, :is_negotiable, :seller_id, :image, category_ids: []
 
- # config.batch_actions = false
  batch_action :make_avail do |ids|
   Item.where(id: ids).update_all(status: :available)
 
@@ -12,7 +11,9 @@ ActiveAdmin.register Item do
   batch_action :add_category, form: -> {
   { category_id: Category.all.map { |c| [c.kind.humanize, c.id] } }
   } do |ids, inputs|
-  category = Category.find(inputs[:category_id]) #input contains data user entered into form
+    puts "DEBUG: Received IDs: #{ids.inspect}" 
+  puts "DEBUG: Received Inputs: #{inputs.inspect}"
+  category = Category.find(inputs[:category_id]) 
   items = Item.find(ids)
 
   items.each do |item|
@@ -31,8 +32,6 @@ Category.kinds.keys.map.each do |kind_name|
 end
 
   filter :title
-# Instead of searching through the polymorphic 'userable' relation directly,
-# target the specific attribute on the associated model.
 filter :seller_userable_of_User_type_name_cont, as: :string, label: "Seller Name"
 filter :seller_id_eq, as: :string, label: "Seller ID"
   filter :status, as: :select, collection: Item.statuses
@@ -65,7 +64,7 @@ filter :seller_id_eq, as: :string, label: "Seller ID"
       f.input :title
       f.input :desc
       f.input :categories, as: :check_boxes
-      f.input :price
+      f.input :price,input_html: { min: 0 }
     end
     
     f.inputs "Specifications" do

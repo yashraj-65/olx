@@ -16,6 +16,7 @@
 
 require 'simplecov'
 SimpleCov.start 'rails' do
+  enable_coverage :branch
   add_group "Models", "app/models"
   add_group "Controllers", "app/controllers"
   add_group "Helpers", "app/helpers"
@@ -25,6 +26,7 @@ SimpleCov.start 'rails' do
   add_filter '/spec/' 
   add_filter "/config/"
 end
+
 # ... your existing test setup code ...
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

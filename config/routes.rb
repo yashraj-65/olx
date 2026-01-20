@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   resources :likes, only: [:index]
 
   resources :conversations do 
-    resources :messages
+    resources :messages, only: [:index,:show, :create]
     resources :deals, only: [:create, :update]
   end
   resources :reviews do
@@ -35,6 +35,7 @@ resources :deals do
   end
 end 
 resources :sellers
+resources :buyers
 resources :likes
 
   namespace :api, defaults: { format: :json } do
@@ -46,14 +47,16 @@ resources :likes
               end
           end
         resources :users, only: [:index, :show, :create,:update, :destroy]
-          resources :deals, only: [:index, :show] do
+        resources :deals, only: [:index, :show, :update] do
                 member do
                   patch :mark_sold
                 end
           end
         resources :reviews, only: [:index, :show, :destroy,:create]
         resources :likes, only: [:index, :show, :destroy, :create]
-        resources :conversations, only: [:index, :show,:update]
+        resources :conversations, only: [:index, :show,:update] do
+          resources :messages, only: [:index, :show, :create]
+        end
         resources :sellers, only: [:index, :show, :update]
       end
   end

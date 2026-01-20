@@ -1,34 +1,39 @@
-class SellersController < ApplicationController
-  before_action :set_seller_and_user, only: :show
+class BuyersController < ApplicationController
+  before_action :set_buyer_and_user, only: :show
 
   def show
-    @reviews = @seller.reviews.includes(:reviewer)
-    @average_rating = @reviews.average(:rating).to_f.round(1)
-
-   @active_listings = @seller.items.where(status: [:available, nil])
-
+    @reviews = @user.seller&.reviews&.includes(:reviewer) || []
+    @average_rating = @reviews.any? ? @reviews.average(:rating).to_f.round(1) : 0.0
+    @active_listings = @user.seller&.items&.where(status: [:available, nil]) || Item.none
+      
     if @user == current_user
-      load_sold_and_bought_items
-   else
-    @sold_items = []
-    @bought_items = []
+        load_sold_and_bought_items
+    else
+      @sold_items = []
+      @bought_items = []
     end
   end
 
   private
 
-  def set_seller_and_user
-    @seller = Seller.find(params[:id])
-    @user   = @seller.userable
+  def set_buyer_and_user
+    @buyer = Buyer.find(params[:id])
+    @user   = @buyer.userable
   end
 
-def load_sold_and_bought_items
-  @sold_items = @user.sold_items
-  if @user.buyer
-    @bought_items = @user.bought_items
-  else
-    @bought_items = []
+  def load_sold_and_bought_items
+    if @user.seller
+      @sold_items = @user.seller.items.where(status: :sold)
+    else
+      @sold_items = []
+    end
+
+    if @user.buyer
+      @bought_items = @user.bought_items
+    else
+      @bought_items = []
+    end
   end
-end
+
 
 end

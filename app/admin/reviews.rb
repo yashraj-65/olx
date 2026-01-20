@@ -25,8 +25,12 @@ ActiveAdmin.register Review do
     id_column
     column :comment
     column :rating
-    column :reviewer
-    column :seller
+    column :reviewer do |review|
+      review.reviewer.userable.name
+    end
+    column :seller do |review|
+      review.seller.userable.name
+    end
     column "Deal ID", :deal_id
     column :created_at
     actions

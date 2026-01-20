@@ -12,22 +12,11 @@ module Api
 
             def show
                 @review=Review.find(params[:id])
-                render json: @review.as_json(
-                only: [:id, :comment, :rating, :seller_id, :reviewer_id],
-                include: {
-                    deal: {
-                    only: [:id, :agreed_price]
-                    },
-                    seller: {
-                    only: [:id, :avg_rating, :contact_number]
-                    }
-                }
-                )
             end
 
             def destroy
                 @review = Review.find(params[:id])
-                if @review.reviewer_id == current_user.id
+                if @review.reviewer.userable_id == current_user.id
                     @review.destroy
                     render json: {message: "Review deleted"},status: :ok
                 else
@@ -37,7 +26,7 @@ module Api
 
             def create
             @review = Review.new(review_params)
-            @review.reviewer_id = current_user.id
+            @review.reviewer_id = current_user.buyer.id
 
             if @review.save
             render json: @review.as_json(include: [:deal, :seller]), status: :created
@@ -50,7 +39,7 @@ module Api
         private
 
         def review_params
-            params.require(:review).permit(:comment, :rating)
+            params.require(:review).permit(:comment, :rating,:seller_id, :deal_id)
         end
 
 

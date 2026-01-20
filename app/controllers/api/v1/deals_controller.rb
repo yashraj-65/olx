@@ -11,12 +11,14 @@ module Api
             end
             def mark_sold
                 @deal =Deal.find(params[:id])
-                if @deal.seller.id == current_user.id
+                puts "LOG: Current User: #{current_user.id}"
+                puts "LOG: Seller Userable ID: #{@deal.seller&.userable_id}"
+                if @deal.seller&.userable_id == current_user.id
                     @deal.update(seller_marked_done: true)
                     render json: {message: "seller confirmed", deal: @deal}
-                elsif @deal.buyer.id==current_user.id
+                elsif @deal.buyer&.userable_id==current_user.id
                     @deal.update(buyer_marked_done: true)
-                    render json: {message: "seller confirmed", deal: @deal}
+                    render json: {message: "buyer confirmed", deal: @deal}
                 else
                    render json: {message: "user not part of deal"}, status: :forbidden
                 end
@@ -24,13 +26,13 @@ module Api
             end
             def update
                 @deal = Deal.find(params[:id])
-                if @deal.seller.id == current_user.id || @deal.buyer.id == current_user.id
-                    @deal.update(deal_params)
+                unless @deal.seller&.userable_id == current_user.id || @deal.buyer&.userable_id == current_user.id
+                    return render json: { message: "unauthorized" }, status: :forbidden
                 end
-                if @deal.save
-                    render json: {message: "sucefully updated", deal: @deal}, status: :ok
+                if @deal.update(item_params)
+                    render json: { message: "sucefully updated", deal: @deal }, status: :ok
                 else
-                     render json: {message: "failed updat", deal: @deal}, status: :unprocessable_entity
+                    render json: { message: "failed update", errors: @deal.errors }, status: :unprocessable_entity
                 end
             end
             

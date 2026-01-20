@@ -1,7 +1,7 @@
 class Message < ApplicationRecord
     belongs_to :conversation
     belongs_to :user
-
+    validates :body,  length: { minimum: 1 }
 
     after_create_commit ->{
         broadcast_append_to self.conversation,

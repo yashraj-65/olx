@@ -44,7 +44,7 @@ module Api
     def search_by_query
         @items = Item.includes(seller: :userable)
                      .search_by_query(params[:query])
-        
+        puts "DEBUG: Found #{@items.count} items"
         render :index 
     end
 

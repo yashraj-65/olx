@@ -11,7 +11,17 @@ RSpec.describe Message, type: :model do
             expect(Message.ransackable_associations).to match_array(expected_associations)
         end
     end
+describe "validations" do
+  it "is invalid with an empty body" do
+      message = build(:message, body: "")
+      expect(message).not_to be_valid
+    end
 
+    it "is valid with a body of 2 or more characters" do
+      message = build(:message, body: "Hi")
+      expect(message).to be_valid
+    end
+end
 describe "callbacks" do
     let(:user) { create(:user) }
      let(:user2) { create(:user) }
