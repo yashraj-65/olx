@@ -1,4 +1,4 @@
-attributes :id, :title, :desc, :price
+attributes :id, :title, :desc, :price, :status
 
     child :seller do
         attributes :id, :avg_rating

@@ -5,7 +5,7 @@ class SellersController < ApplicationController
     @reviews = @seller.reviews.includes(:reviewer)
     @average_rating = @reviews.average(:rating).to_f.round(1)
 
-   @active_listings = @seller.items.where(status: [:available, nil])
+   @active_listings = @seller.items.available
 
     if @user == current_user
       load_sold_and_bought_items

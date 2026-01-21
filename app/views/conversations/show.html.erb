@@ -104,12 +104,12 @@
     </div>
 
     <%# Messages Body %>
-    <div id="chat-window">
-      <%= turbo_stream_from @conversation %>
-      <div id="messages_list" style="display: flex; flex-direction: column; gap: 15px;">
-        <%= render @messages %>
-      </div>
-    </div>
+<div id="chat-window" data-current-user-id="<%= current_user.id %>">
+  <%= turbo_stream_from @conversation %>
+  <div id="messages_list">
+    <%= render @messages %>
+  </div>
+</div>
 
     <%# Input Section %>
     <div class="message-input" style="padding: 20px; background: white; border-top: 4px solid black; flex-shrink: 0;">

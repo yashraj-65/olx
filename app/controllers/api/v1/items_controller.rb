@@ -12,7 +12,7 @@ module Api
       end
       def update
           @item = Item.find(params[:id])
-          if @item.seller_id == current_user.seller&.id
+          if @item.seller.userable_id == current_user.id
               if @item.update(item_params)
                 render :show, status: :ok
               else
@@ -33,7 +33,7 @@ module Api
         end
       def destroy
         @item=Item.find(params[:id])
-        if  @item.seller_id == current_user.seller&.id
+        if  @item.seller.userable_id == current_user&.id
           @item.destroy
           render json: {message: "Item destroyed succefully"}, status: :ok
         else

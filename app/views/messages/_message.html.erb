@@ -1,8 +1,27 @@
+<style>
+.message-row {
+    justify-content: flex-start;
+    transition: all 0.2s ease;
+  }
 
-<%# We add a data-user-id so the browser knows who sent this %>
-<div class="message-row" data-sender-id="<%= message.user_id %>" style="display: flex; justify-content: flex-start;">
+  /* Right Side alignment - Applied by JS */
+  .message-row.is-me {
+    justify-content: flex-end !important;
+  }
+
+  .message-row.is-me .message-box {
+    background: #dcf8c6 !important; /* Green for you */
+    box-shadow: -4px 4px 0px black !important;
+    border-bottom-right-radius: 0;
+  }
+</style>
+<div class="message-row" 
+     data-sender-id="<%= message.user_id %>"
+     style="display: flex; width: 100%; margin-bottom: 10px; justify-content: flex-start;">
+  
   <div class="message-box" 
-       style="max-width: 75%; padding: 12px 18px; border: 3px solid black; font-weight: 600; background: #fff; color: #000; box-shadow: 4px 4px 0px black;">
+       style="max-width: 75%; padding: 12px 18px; border: 3px solid black; font-weight: 600; 
+              box-shadow: 4px 4px 0px black; background: #ffffff;">
     <p style="margin: 0;"><%= message.body %></p>
     <div style="font-size: 0.7rem; margin-top: 5px; opacity: 0.6; text-align: right;">
       <%= message.created_at.strftime("%I:%M %p") %>
@@ -10,29 +29,38 @@
   </div>
 </div>
 
+
 <script>
-  function scrollToBottom() {
+  function alignAndScroll() {
     const chatWindow = document.getElementById('chat-window');
-    if (chatWindow) {
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
+    if (!chatWindow) return;
+
+    const currentUserId = chatWindow.getAttribute('data-current-user-id');
+    const messages = document.querySelectorAll('.message-row');
+
+    messages.forEach(msg => {
+      if (msg.getAttribute('data-sender-id') === currentUserId) {
+        msg.classList.add('is-me');
+      }
+    });
+
+    // Scroll to bottom
+    chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 
-  // 1. Scroll when you first open the page
-  document.addEventListener("turbo:load", scrollToBottom);
+  // Initial load
+  document.addEventListener("turbo:load", alignAndScroll);
 
-  // 2. Clear input after YOU send a message
-  document.addEventListener("turbo:submit-end", function(event) {
-    const messageForm = document.getElementById("message_form");
-    if (event.target === messageForm && event.detail.success) {
-      messageForm.reset();
-      setTimeout(scrollToBottom, 50); // Small delay to let the message render
-    }
+  // When a message arrives via Turbo Stream
+  document.addEventListener("turbo:before-stream-render", function() {
+    setTimeout(alignAndScroll, 100);
   });
 
-  // 3. Scroll when a message arrives via real-time (Turbo Stream)
-  // This listener catches the broadcast from the other user
-  document.addEventListener("turbo:before-stream-render", function() {
-    setTimeout(scrollToBottom, 50);
+  // Clear input after sending
+  document.addEventListener("turbo:submit-end", function(event) {
+    if (event.detail.success) {
+      document.getElementById("message_form").reset();
+      setTimeout(alignAndScroll, 100);
+    }
   });
 </script>

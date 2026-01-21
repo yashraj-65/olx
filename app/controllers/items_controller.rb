@@ -24,7 +24,7 @@ class ItemsController < ApplicationController
 
 
     def create
-        seller = current_user.seller||current_user.create_seller
+        seller = current_user.seller
         @item = seller.items.build(item_params)
 
         if @item.save
