@@ -35,6 +35,17 @@
           <span style="background: #eef2f3; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">
             <%= @item.seller.userable.name %>
           </span>
+          <br>
+          <br>
+          <% if @item.sold? %>
+            <% deal = @item.deals.where(status: :success).first %>
+            <% if deal %>
+              <strong>Buyer:</strong> 
+              <span style="background: #eef2f3; padding: 4px 8px; border-radius: 4px; font-size: 0.9rem;">
+                <%= deal.buyer.userable.name %>
+              </span>
+            <% end %>
+          <% end %>
         </p>
 
         <%# --- ACTION BUTTONS START --- %>

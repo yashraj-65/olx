@@ -277,7 +277,8 @@
             <div class="convo-info">
               <div class="item-title"><%= convo.item.title %></div>
               <div class="seller-name">
-                <%= convo.seller_profile.userable.name %>
+                <% other_user = convo.seller_profile.userable == current_user ? convo.buyer_profile.userable : convo.seller_profile.userable %>
+                <%= other_user.name %>
               </div>
             </div>
           <% end %>

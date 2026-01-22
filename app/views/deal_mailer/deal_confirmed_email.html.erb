@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f7f6; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f4f7f6; padding: 40px 0;">
+    <tr>
+      <td align="center">
+        <table width="500" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;">
+          
+          <tr>
+            <td style="background-color: #ffde03; padding: 30px; text-align: center;">
+              <h1 style="margin: 0; font-size: 24px; color: #1a1a1a; text-transform: uppercase; letter-spacing: 2px;">Deal Confirmed</h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 40px;">
+              <p style="font-size: 16px; color: #4a5568; line-height: 1.6; margin-top: 0;">
+                Hello <strong><%= @buyer.name %></strong> and <strong><%= @seller.name %></strong>,
+              </p>
+              <p style="font-size: 16px; color: #4a5568; line-height: 1.6;">
+                The handshake is official. Below are the details of your confirmed deal:
+              </p>
+
+              <table width="100%" border="0" cellspacing="0" cellpadding="20" style="background-color: #f9fafb; border-radius: 12px; margin: 30px 0; border: 1px dashed #cbd5e0;">
+                <tr>
+                  <td>
+                    <div style="font-size: 12px; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Item</div>
+                    <div style="font-size: 18px; color: #1a1a1a; font-weight: bold; margin-bottom: 15px;"><%= @item.title %></div>
+                    
+                    <div style="font-size: 12px; color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Agreed Price</div>
+                    <div style="font-size: 22px; color: #1a1a1a; font-weight: 800;"><%= number_to_currency(@deal.agreed_price, precision: 0) %></div>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="text-align: center; margin-top: 30px;">
+                <%= link_to "VIEW CONVERSATION", conversation_url(@deal.conversation), 
+                    style: "background-color: #1a1a1a; color: #ffffff; padding: 18px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 14px; display: inline-block; letter-spacing: 1px;" %>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 0 40px 40px 40px; text-align: center;">
+              <p style="font-size: 13px; color: #999; margin: 0;">
+                Arrange your exchange safely. Remember to inspect the item before finalizing the hand-off.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

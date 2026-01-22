@@ -50,6 +50,7 @@ RSpec.describe "Deals", type: :request do
           expect(response).to have_http_status(:ok)
           expect(deal.reload.seller_marked_done).to be true
         end
+        
         context "buyer marking done" do
                 
             let(:application) { create(:oauth_application) }
@@ -99,42 +100,61 @@ RSpec.describe "Deals", type: :request do
         end
 
       end
-
 describe "PATCH /api/v1/deals/:id" do
-    let(:valid_params) { { deal: { agreed_price: 250.0 } } }
-    let(:invalid_params) { { deal: { status: nil } } } 
-    context "when authorized (as seller)" do
-      it "updates the deal successfully" do
-        patch api_v1_deal_path(deal), params: valid_params, headers: headers
-        
-        expect(response).to have_http_status(:ok)
-      end
+  let(:valid_params) { { deal: { agreed_price: 250.0 } } }
 
-      it "returns unprocessable_entity when update fails validation" do
-        patch api_v1_deal_path(deal), params: { deal: { agreed_price: -1 } }, headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
+  # PATH 1: Authorized as Seller (First part of || is true)
+  context "when authorized as the seller" do
+    it "updates the deal successfully" do
+      patch api_v1_deal_path(deal), params: valid_params, headers: headers
+      expect(response).to have_http_status(:ok)
     end
-
-    context "when unauthorized (different user)" do
-      let(:other_user) { create(:user) }
-      let(:other_token) do 
-        Doorkeeper::AccessToken.create!(
-          resource_owner_id: other_user.id, 
-          application_id: application.id
-        ).token 
-      end
-      let(:other_headers) { { "Authorization" => "Bearer #{other_token}" } }
-
-      it "returns forbidden and does not update the deal" do
-        puts "Route being called: #{api_v1_deal_path(deal)}"
-        original_price = deal.agreed_price
-        patch api_v1_deal_path(deal), params: valid_params, headers: other_headers
-  
-        expect(response).to have_http_status(:forbidden)
-  
-      end
-    end
-    
   end
+
+  # PATH 2: Authorized as Buyer (First part is false, second part is true)
+  context "when authorized as the buyer" do
+    let(:buyer_token) do 
+      Doorkeeper::AccessToken.create!(
+        resource_owner_id: user_buyer.id, 
+        application_id: application.id, 
+        scopes: "public"
+      ).token 
+    end
+    let(:buyer_headers) { { "Authorization" => "Bearer #{buyer_token}" } }
+
+    it "updates the deal successfully" do
+      patch api_v1_deal_path(deal), params: valid_params, headers: buyer_headers
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # PATH 3: Unauthorized (Both parts of || are false - Hits the 'return')
+  context "when unauthorized (different user)" do
+    let(:random_user) { create(:user) }
+    let(:random_token) do 
+      Doorkeeper::AccessToken.create!(
+        resource_owner_id: random_user.id, 
+        application_id: application.id,
+        scopes: "public"
+      ).token 
+    end
+    let(:random_headers) { { "Authorization" => "Bearer #{random_token}" } }
+
+    it "returns forbidden and hits the unauthorized return branch" do
+      patch api_v1_deal_path(deal), params: valid_params, headers: random_headers
+      
+      expect(response).to have_http_status(:forbidden)
+      expect(JSON.parse(response.body)["message"]).to eq("unauthorized")
+    end
+  end
+
+  # UNHAPPY PATH: Authorization passes, but validation fails
+  context "when update fails validation" do
+    it "returns unprocessable_entity" do
+      # Triggering the 'else' branch of the @deal.update(item_params)
+      patch api_v1_deal_path(deal), params: { deal: { agreed_price: -1 } }, headers: headers
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+end
 end

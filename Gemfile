@@ -43,6 +43,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem "rubocop",require: false
+  gem "rubocop-rspec",require: false
 end
 
 group :development do
@@ -74,3 +76,5 @@ end
 gem 'simplecov', require: false, group: :test
 
 gem "rails-controller-testing"
+gem 'paranoia', '~> 3.0'
+gem 'pagy', '~> 9.0'

@@ -14,12 +14,12 @@ class DealsController < ApplicationController
                                .where("items.status != ? OR items.status IS NULL", 2)
     end
 
-def destroy
-  @deal = Deal.find(params[:id])
-  @deal.destroy
-  
-  redirect_to deals_path, notice: "Deal was successfully deleted."
-end
+    def destroy
+    @deal = Deal    .find(params[:id])
+    @deal.destroy
+    
+    redirect_to deals_path, notice: "Deal was successfully deleted."
+    end
     def create
         @conversation = Conversation.find(params[:conversation_id])
         @item = @conversation.item
@@ -34,6 +34,7 @@ end
             @deal.seller_marked_done = true
         end
         if @deal.save
+
             redirect_to @conversation, notice: "Deal has been proposed!"
         else
             redirect_to @conversation, alert: "deal failed"
@@ -41,25 +42,25 @@ end
     end
 
 
-def update
-  @deal = Deal.find(params[:id])
-  
-  puts "DEBUG: Current User ID: #{current_user.id}"
-  puts "DEBUG: Seller ID in Deal: #{@deal.conversation.seller_id}"
-  puts "DEBUG: Buyer ID in Deal: #{@deal.conversation.buyer_id}"
+    def update
+    @deal = Deal.find(params[:id])
+    
+    puts "DEBUG: Current User ID: #{current_user.id}"
+    puts "DEBUG: Seller ID in Deal: #{@deal.conversation.seller_id}"
+    puts "DEBUG: Buyer ID in Deal: #{@deal.conversation.buyer_id}"
 
-  if current_user.seller&.id == @deal.conversation.seller_id
-    @deal.update(seller_marked_done: true)
-    flash[:notice] = "Seller confirmed!"
-  elsif current_user.buyer&.id == @deal.conversation.buyer_id
-    @deal.update(buyer_marked_done: true)
-    flash[:notice] = "Buyer confirmed!"
-  else
-    flash[:alert] = "You are not authorized to confirm this deal."
-  end
+    if current_user.seller&.id == @deal.conversation.seller_id
+        @deal.update(seller_marked_done: true)
+        flash[:notice] = "Seller confirmed!"
+    elsif current_user.buyer&.id == @deal.conversation.buyer_id
+        @deal.update(buyer_marked_done: true)
+        flash[:notice] = "Buyer confirmed!"
+    else
+        flash[:alert] = "You are not authorized to confirm this deal."
+    end
 
-  redirect_to deals_path
-end
+    redirect_to deals_path
+    end
     private
     def deal_params
         params.require(:deal).permit(:agreed_price)

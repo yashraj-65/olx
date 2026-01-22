@@ -29,3 +29,132 @@
 
 en:
   hello: "Hello world"
+  
+  # Common UI Elements
+  buttons:
+    submit: "Submit"
+    cancel: "Cancel"
+    delete: "Delete"
+    edit: "Edit"
+    save: "Save"
+    create: "Create"
+    back: "Back"
+    sign_in: "Sign In"
+    sign_up: "Sign Up"
+    sign_out: "Sign Out"
+    chat: "Chat with Seller"
+    confirm_deal: "Confirm Deal"
+    mark_done: "Mark as Done"
+    
+  # Flash Messages
+  messages:
+    item_created: "Item successfully listed!"
+    item_updated: "Item updated successfully"
+    item_deleted: "Item has been removed"
+    deal_created: "Deal created successfully"
+    deal_confirmed: "Deal confirmed!"
+    deal_failed: "Deal could not be confirmed"
+    message_sent: "Message sent"
+    review_created: "Review submitted"
+    error_occurred: "An error occurred"
+    
+  # Devise Messages (Authentication)
+  devise:
+    sessions:
+      signed_in: "Signed in successfully"
+      signed_out: "Signed out successfully"
+    registrations:
+      signed_up: "Welcome! You have signed up successfully"
+      updated: "Account updated successfully"
+      destroyed: "Account deleted successfully"
+    passwords:
+      send_instructions: "You will receive an email with password reset instructions"
+      updated: "Password updated successfully"
+    confirmations:
+      send_instructions: "You will receive an email with confirmation instructions"
+      confirmed: "Email confirmed successfully"
+      
+  # ActiveRecord Error Messages
+  activerecord:
+    models:
+      user: "User"
+      item: "Item"
+      deal: "Deal"
+      message: "Message"
+      review: "Review"
+      conversation: "Conversation"
+    attributes:
+      user:
+        email: "Email"
+        password: "Password"
+        name: "Name"
+        description: "Bio"
+        avatar: "Profile Picture"
+      item:
+        title: "Title"
+        price: "Price"
+        desc: "Description"
+        condition: "Condition"
+        color: "Color"
+        warranty: "Warranty"
+        status: "Status"
+        image: "Image"
+      deal:
+        agreed_price: "Agreed Price"
+        status: "Status"
+      message:
+        content: "Message"
+      review:
+        rating: "Rating"
+        comment: "Comment"
+    errors:
+      messages:
+        blank: "can't be blank"
+        invalid: "is invalid"
+        taken: "has already been taken"
+        too_short: "is too short"
+        too_long: "is too long"
+        not_a_number: "is not a number"
+        greater_than: "must be greater than %{count}"
+        
+  # Item Status Enums
+  enums:
+    item:
+      status:
+        pending: "Pending"
+        available: "Available"
+        sold: "Sold"
+      condition:
+        brand_new: "Brand New"
+        small_defect: "Small Defect"
+        damaged: "Damaged"
+    deal:
+      status:
+        failed: "Failed"
+        success: "Success"
+        
+  # Page Titles & Labels
+  titles:
+    marketplace: "Marketplace"
+    my_listings: "My Listings"
+    my_profile: "My Profile"
+    seller_profile: "Seller Profile"
+    item_details: "Item Details"
+    start_conversation: "Start Conversation"
+    
+  # Labels
+  labels:
+    seller: "Seller"
+    buyer: "Buyer"
+    price: "Price"
+    condition: "Condition"
+    color: "Color"
+    warranty: "Warranty"
+    negotiable: "Negotiable"
+    categories: "Categories"
+    description: "Description"
+    rating: "Rating"
+    reviews: "Reviews"
+    active_listings: "Active Listings"
+    sold_items: "Sold Items"
+    bought_items: "Bought Items"

@@ -1,4 +1,61 @@
-<style>/* Layout Container */
+<style>
+/* Final Brutalist Pagy Fix */
+.pagination-wrapper {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Force the container to be a solid block */
+.pagy-nav {
+  display: flex !important;
+  border: 4px solid #1a1a1a !important;
+  background: #1a1a1a; /* Black gap lines */
+  gap: 4px; /* Creates the "inner border" effect */
+  padding: 0;
+}
+
+/* Target every child: links, current page, and disabled arrows */
+.pagy-nav a, 
+.pagy-nav span {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: #fff; /* White boxes */
+  color: #1a1a1a;
+  text-decoration: none;
+  font-family: 'Space Mono', monospace;
+  font-weight: 900;
+  font-size: 1rem;
+  transition: 0.1s;
+}
+
+/* The Active Page - Brutal Yellow */
+.pagy-nav .current {
+  background: #ffde03 !important; /* Your yellow */
+  color: #1a1a1a !important;
+}
+
+/* Hover - Invert to Black */
+.pagy-nav a:hover {
+  background: #1a1a1a !important;
+  color: #fff !important;
+}
+
+/* Disabled Arrows (Prev/Next when not available) */
+.pagy-nav .disabled {
+  background: #eee !important;
+  color: #bbb !important;
+  cursor: not-allowed;
+}
+
+/* Ensure arrows look consistent */
+.pagy-nav .prev a, .pagy-nav .next a {
+  font-size: 1.2rem;
+}
+
 .profile-layout {
   display: flex;
   gap: 60px;
@@ -222,17 +279,23 @@
   </aside>
 
   <main class="profile-main-content">
-    <input type="radio" name="profile_tab" id="tab-reviews" class="tab-radio" checked>
-    <input type="radio" name="profile_tab" id="tab-active" class="tab-radio">
-    <input type="radio" name="profile_tab" id="tab-sold" class="tab-radio">
-    <input type="radio" name="profile_tab" id="tab-bought" class="tab-radio">
+      <input type="radio" name="profile_tab" id="tab-reviews" class="tab-radio" 
+            <%= "checked" if params[:sold_page].blank? && params[:bought_page].blank? %>>
+      
+      <input type="radio" name="profile_tab" id="tab-active" class="tab-radio">
+      
+      <input type="radio" name="profile_tab" id="tab-sold" class="tab-radio" 
+            <%= "checked" if params[:sold_page].present? %>>
+      
+      <input type="radio" name="profile_tab" id="tab-bought" class="tab-radio" 
+            <%= "checked" if params[:bought_page].present? %>>
 
     <nav class="industrial-nav">
-      <label for="tab-reviews" class="nav-item">Feedback (<%= @reviews.count %>)</label>
+      <label for="tab-reviews" class="nav-item">Feedback (<%= @seller.reviews.count %>)</label>
       <label for="tab-active" class="nav-item">Live Listings (<%= @active_listings.count %>)</label>
       <% if @user == current_user %>
-        <label for="tab-sold" class="nav-item">Sold</label>
-        <label for="tab-bought" class="nav-item">Bought</label>
+        <label for="tab-sold" class="nav-item">Sold(<%= @user.seller.items.where(status: :sold).size %>)</label>
+        <label for="tab-bought" class="nav-item">Bought(<%= @user.buyer.purchase_count%>)</label>
       <% end %>
     </nav>
 
@@ -241,6 +304,16 @@
         <div class="profile-grid">
           <%= render partial: "reviews/review", collection: @reviews, as: :review if @reviews.any? %>
         </div>
+
+        <%# Reviews Pagination %>
+        <% if @pagy_reviews && @pagy_reviews.pages > 1 %>
+          <div class="pagination-wrapper">
+            <nav class="pagy-nav">
+              <%# This will render the blocks defined by the CSS above %>
+              <%== pagy_nav(@pagy_reviews) %>
+            </nav>
+         </div>
+        <% end %>
       </section>
 
       <section id="active-section" class="tab-content">
@@ -255,15 +328,23 @@
         </div>
       </section>
 
-   <section id="sold-section" class="tab-content">
+      <section id="sold-section" class="tab-content">
         <div class="profile-grid">
           <% if @sold_items.any? %>
-            <%# This renders the _item.html.erb partial for every item in @sold_items %>
             <%= render partial: "items/item", collection: @sold_items, as: :item %>
           <% else %>
-            <p class="no-items-msg">No sold items yet.</p>
+            <div style="grid-column: 1/-1; text-align: center;">
+              <p class="no-items-msg">No sold items yet.</p>
+            </div>
           <% end %>
         </div>
+
+        <%# Keep this OUTSIDE the grid div for better centering %>
+        <% if @pagy_sold && @pagy_sold.pages > 1 %>
+          <div class="pagination-wrapper">
+            <%== pagy_nav(@pagy_sold) %>
+          </div>
+        <% end %>
       </section>
 
       <section id="bought-section" class="tab-content">
@@ -275,6 +356,11 @@
             <p class="no-items-msg">No purchase history.</p>
           <% end %>
         </div>
+                <% if @pagy_sold && @pagy_sold.pages > 1 %>
+          <div class="pagination-wrapper">
+            <%== pagy_nav(@pagy_sold) %>
+          </div>
+        <% end %>
       </section>
     </div>
   </main>

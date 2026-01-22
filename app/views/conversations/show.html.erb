@@ -88,10 +88,16 @@
     <%# Header Section %>
     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 4px solid black; background: white; flex-shrink: 0;">
       <div style="display: flex; align-items: center;">
-        <div class="img-avatar" style="width: 45px; height: 45px; border: 3px solid black; background: #ffde03; margin-right: 15px;"></div>
+        <div class="img-avatar" style="width: 45px; height: 45px; border: 3px solid black; background: <%= @conversation.item.sold? ? 'red' : '#ffde03' %>; margin-right: 15px; margin-right: 15px;"></div>
         <div class="text-chat">
           <span style="font-size: 0.7rem; color: #666; display: block; text-transform: uppercase;">Conversation with</span>
-          <span style="font-weight: 900; font-size: 1.2rem;"><%= @conversation.seller_profile.userable.name %></span>
+          <% other_user = @conversation.seller_profile.userable == current_user ? @conversation.buyer_profile.userable : @conversation.seller_profile.userable %>
+          <% if @conversation.item.sold? %>
+            <span style="background: red; color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 3px; vertical-align: middle; margin-left: 5px;">SOLD</span>
+          <% else %>
+            <span style="background: #28a745; color: white; font-size: 0.6rem; padding: 2px 5px; border-radius: 3px; vertical-align: middle; margin-left: 5px;">AVAILABLE</span>
+          <% end %>
+          <span style="font-weight: 900; font-size: 1.2rem;"><%= other_user.name %></span>
         </div>
       </div>
 

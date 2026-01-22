@@ -21,9 +21,9 @@ class Deal < ApplicationRecord
     end
     
     def mark_item_as_sold   
-    item.sold!
-
-    buyer.refresh_stats!
+      item.update(status: :sold)
+      DealMailer.deal_confirmed_email(self).deliver_later
+      buyer.refresh_stats!
     end
 
     def self.ransackable_attributes(auth_object = nil)      

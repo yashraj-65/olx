@@ -11,8 +11,6 @@ module Api
             end
             def mark_sold
                 @deal =Deal.find(params[:id])
-                puts "LOG: Current User: #{current_user.id}"
-                puts "LOG: Seller Userable ID: #{@deal.seller&.userable_id}"
                 if @deal.seller&.userable_id == current_user.id
                     @deal.update(seller_marked_done: true)
                     render json: {message: "seller confirmed", deal: @deal}

@@ -17,11 +17,13 @@
 require 'simplecov'
 SimpleCov.start 'rails' do
   enable_coverage :branch
+  track_files "app/**/*.rb"
   add_group "Models", "app/models"
   add_group "Controllers", "app/controllers"
   add_group "Helpers", "app/helpers"
   add_group "Mailers", "app/mailers"
   add_group "Admin", "app/admin"
+  add_group "Services", "app/services"
   add_group "Initializers", "config/initializers"
   add_filter '/spec/' 
   add_filter "/config/"

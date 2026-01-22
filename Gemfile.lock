@@ -234,7 +234,10 @@ GEM
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    pagy (9.4.0)
     parallel (1.27.0)
+    paranoia (3.1.0)
+      activerecord (>= 7, < 8.2)
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
@@ -364,6 +367,9 @@ GEM
       rubocop (>= 1.72)
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
+    rubocop-rspec (3.9.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (3.2.2)
@@ -454,6 +460,8 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kaminari
+  pagy (~> 9.0)
+  paranoia (~> 3.0)
   pg (~> 1.1)
   puma (>= 5.0)
   rabl
@@ -461,7 +469,9 @@ DEPENDENCIES
   rails-controller-testing
   redis (~> 4.0)
   rspec-rails (~> 8.0.0)
+  rubocop
   rubocop-rails-omakase
+  rubocop-rspec
   sassc-rails
   selenium-webdriver
   simplecov

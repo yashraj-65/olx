@@ -13,7 +13,7 @@ RSpec.describe ReviewsController, type: :controller do
     sign_in user
   end
 
-  describe "POST #create_review" do
+  describe "POST create" do
     let(:valid_params) { { comment: "Great!", rating: 5 } }
 
     it "creates a review and redirects to the item path" do
@@ -28,25 +28,27 @@ RSpec.describe ReviewsController, type: :controller do
     end
 
     it "fails with invalid rating and redirects with alert" do
-      post :create_review, params: { deal_id: deal.id, review: { rating: 6 } } # Invalid rating
+      post :create_review, params: { deal_id: deal.id, review: { rating: 6 } } 
       
       expect(flash[:alert]).to eq("deal failed!!!!")
       expect(response).to redirect_to(item_path(item))
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "DELETE destroy" do
     let!(:review) { create(:review, reviewer: buyer, deal: deal, seller: seller) }
 
     context "when the current user is the owner of the review" do
-      it "deletes the review" do
-        expect {
-          delete :destroy, params: { id: review.id }
-        }.to change(Review, :count).by(-1)
-        
-        expect(flash[:notice]).to eq("Review deleted.")
-      end
+          it "deletes the review" do
+            expect {
+              delete :destroy, params: { id: review.id }
+            }.to change(Review, :count).by(-1)
+            
+            expect(flash[:notice]).to eq("Review archieved.")
+          end
+
     end
+  
 
     context "when a different user tries to delete the review" do
       it "does not delete the review and shows an alert" do
@@ -61,4 +63,6 @@ RSpec.describe ReviewsController, type: :controller do
       end
     end
   end
+
+
 end

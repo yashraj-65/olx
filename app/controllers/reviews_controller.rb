@@ -1,4 +1,5 @@
 class ReviewsController < ApplicationController
+    
     def create_review
         @deal=Deal.find(params[:deal_id])
         @seller=@deal.item.seller
@@ -15,18 +16,17 @@ class ReviewsController < ApplicationController
         end
     end
     def destroy
-    @review = Review.find(params[:id])
-    
-    if @review.reviewer == current_user.buyer
-        @review.destroy
-        redirect_back fallback_location: root_path, notice: "Review deleted."
-    else
-        redirect_back fallback_location: root_path, alert: "Not authorized."
-    end
+        @review = Review.find(params[:id])
+        
+        if @review.reviewer == current_user.buyer
+            @review.destroy
+            redirect_back fallback_location: root_path, notice: "Review archieved."
+        else
+            redirect_back fallback_location: root_path, alert: "Not authorized."
+        end
     end
     private
 
-  
         def review_params
             params.require(:review).permit(:comment,:rating)
         end

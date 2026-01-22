@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :reviews do
   member do
   post 'like_review', to: 'likes#like_review'
+  
   end
 end
 resources :deals do
@@ -52,7 +53,14 @@ resources :likes
                   patch :mark_sold
                 end
           end
-        resources :reviews, only: [:index, :show, :destroy,:create]
+        resources :reviews, only: [:index, :show, :destroy,:create] do
+          collection do
+            get :deleted
+          end
+          member do
+            patch :restore
+          end
+        end
         resources :likes, only: [:index, :show, :destroy, :create]
         resources :conversations, only: [:index, :show,:update] do
           resources :messages, only: [:index, :show, :create]

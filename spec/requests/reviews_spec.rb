@@ -5,7 +5,7 @@ RSpec.describe "Reviews", type: :request do
     let(:user1) {create(:user)}
     let(:seller) {create(:seller, userable: user)}
     let(:deal) { create(:deal) }
-    let(:buyer) {create(:buyer, userable: user1)}
+    let(:buyer) {user1.buyer}
     let!(:review) {create(:review,seller: seller, reviewer: buyer)}
     let(:application) { create(:oauth_application) }
     let(:token) do 
@@ -36,6 +36,30 @@ RSpec.describe "Reviews", type: :request do
             it "succefully deleted" do
                 delete api_v1_review_path(review),headers: headers
                 expect(response).to have_http_status(:ok)
+            end
+            it "shows soft deleted item" do
+                review.destroy 
+                get deleted_api_v1_reviews_path, headers: headers
+                puts "BODY: #{response.body}" 
+                json_response = JSON.parse(response.body)
+                expect(json_response.map { |r| r["id"] }).to include(review.id)
+            end
+            it "restores soft deleted item" do
+                review.destroy
+                patch restore_api_v1_review_path(review),headers: headers
+                expect(response).to have_http_status(:ok)
+                expect(review.reload.deleted_at).to be_nil
+            end
+        end
+        context "when restoration fails" do
+            it "returns unprocessable entity" do
+                review.destroy
+                allow_any_instance_of(Review).to receive(:restore).and_return(false)
+                patch restore_api_v1_review_path(review), headers: headers
+                expect(response).to have_http_status(:unprocessable_content) # or :unprocessable_entity
+                
+                json = JSON.parse(response.body)
+                expect(json["error"]).to eq("Failed to restore")
             end
         end
         context "not authrized to delete" do

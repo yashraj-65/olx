@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_18_205528) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_21_112203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -207,7 +207,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_18_205528) do
     t.bigint "reviewer_id", null: false
     t.bigint "seller_id", null: false
     t.bigint "deal_id", null: false
+    t.datetime "deleted_at"
     t.index ["deal_id"], name: "index_reviews_on_deal_id"
+    t.index ["deleted_at"], name: "index_reviews_on_deleted_at"
     t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
     t.index ["seller_id"], name: "index_reviews_on_seller_id"
   end

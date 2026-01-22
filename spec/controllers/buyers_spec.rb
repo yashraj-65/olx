@@ -11,7 +11,7 @@ RSpec.describe BuyersController, type: :controller do
 
   before { sign_in user }
 
-  describe "GET #show" do
+  describe "GET show" do
     context "when viewing own buyer profile" do
       it "loads seller reviews, active listings, and personal history" do
         review = create(:review, seller: seller, rating: 5)
@@ -56,17 +56,17 @@ RSpec.describe BuyersController, type: :controller do
             expect(assigns(:sold_items)).to eq([])
             expect(assigns(:bought_items)).to eq([])
         end
-it "handles missing buyer profile via stubbing" do
-      allow_any_instance_of(User).to receive(:buyer).and_return(nil)
-      get :show, params: { id: buyer.id }
-      expect(assigns(:bought_items)).to eq([])
-    end
+      it " missing buyer profile  " do
+        allow_any_instance_of(User).to receive(:buyer).and_return(nil)
+        get :show, params: { id: buyer.id }
+        expect(assigns(:bought_items)).to eq([])
+      end
 
-    it "handles missing seller profile via stubbing" do
-      allow_any_instance_of(User).to receive(:seller).and_return(nil)     
-      get :show, params: { id: buyer.id }     
-      expect(assigns(:reviews)).to eq([])
-      expect(assigns(:active_listings)).to be_empty
-    end
+      it " missing seller profile " do
+        allow_any_instance_of(User).to receive(:seller).and_return(nil)     
+        get :show, params: { id: buyer.id }     
+        expect(assigns(:reviews)).to eq([])
+        expect(assigns(:active_listings)).to be_empty
+      end
   end
 end

@@ -2,8 +2,15 @@ module Api
   module V1
     class ItemsController < BaseController
       def index
-        @items = Item.includes(seller: :userable).all
-
+        @pagy, @items = pagy(Item.includes(seller: :userable).all,limit: 10)
+        @pagination = {
+          count: @pagy.count,
+          pages: @pagy.pages,
+          current_page: @pagy.page,
+          next_page: @pagy.next,
+          prev_page: @pagy.prev,
+          items_per_page: @pagy.limit,
+        }
       end
 
       def show
@@ -42,9 +49,18 @@ module Api
       end
 
     def search_by_query
-        @items = Item.includes(seller: :userable)
-                     .search_by_query(params[:query])
-        puts "DEBUG: Found #{@items.count} items"
+        @pagy,@items = pagy(Item.includes(seller: :userable)
+                     .search_by_query(params[:query]),limit: 10)
+
+        @pagination = {
+          count: @pagy.count,
+          pages: @pagy.pages,
+          current_page: @pagy.page,
+          next_page: @pagy.next,
+          prev_page: @pagy.prev,
+          items_per_page: @pagy.limit,
+        }
+
         render :index 
     end
 

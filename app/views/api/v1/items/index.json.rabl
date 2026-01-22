@@ -1,2 +1,5 @@
-collection @items, :root => "products", :object_root => "ITEM"
-extends "api/v1/items/_item"
+node(:pagination) { @pagination }
+
+child(@items => "products") do
+  extends "api/v1/items/_item"
+end

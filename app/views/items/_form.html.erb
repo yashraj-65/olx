@@ -27,6 +27,10 @@
         <%= f.label :condition, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
         <%= f.select :condition, Item.conditions.keys.map { |k| [k.titleize, k] }, {}, { style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; background: white;" } %>
       </div>
+       <div style="flex: 1;">
+        <%= f.label :colour, style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+        <%= f.text_field :colour, style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
+      </div>
     </div>
 
     <div style="margin-bottom: 1rem;">
@@ -37,9 +41,9 @@
     <div style="margin-bottom: 1rem; padding: 10px; background: #f9f9f9; border: 2px solid black; border-radius: 8px;">
       <span style="display: block; font-weight: bold; margin-bottom: 8px;">Categories</span>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.9rem;">
-        <%= f.collection_check_boxes :category_ids, Category.all, :id, ->(c) { c.kind.titleize } do |b| %>
+        <%= f.collection_check_boxes :category_ids, Category.all, :id, :kind do |b| %>
           <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-            <%= b.check_box %> <%= b.text %>
+            <%= b.check_box %> <%= b.text.titleize %>
           </label>
         <% end %>
       </div>
