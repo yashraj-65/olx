@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
   end
 
   def admin_request?
-  # This checks if the request is for an ActiveAdmin page or an AdminUser devise action
     request.path.start_with?('/admin')
 end
 

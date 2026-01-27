@@ -15,11 +15,12 @@ class DealsController < ApplicationController
     end
 
     def destroy
-    @deal = Deal    .find(params[:id])
+    @deal = Deal.find(params[:id])
     @deal.destroy
     
     redirect_to deals_path, notice: "Deal was successfully deleted."
     end
+
     def create
         @conversation = Conversation.find(params[:conversation_id])
         @item = @conversation.item
@@ -43,20 +44,20 @@ class DealsController < ApplicationController
 
 
     def update
-    @deal = Deal.find(params[:id])
-    
-    puts "DEBUG: Current User ID: #{current_user.id}"
-    puts "DEBUG: Seller ID in Deal: #{@deal.conversation.seller_id}"
-    puts "DEBUG: Buyer ID in Deal: #{@deal.conversation.buyer_id}"
+        @deal = Deal.find(params[:id])
+        
+        puts "DEBUG: Current User ID: #{current_user.id}"
+        puts "DEBUG: Seller ID in Deal: #{@deal.conversation.seller_id}"
+        puts "DEBUG: Buyer ID in Deal: #{@deal.conversation.buyer_id}"
 
-    if current_user.seller&.id == @deal.conversation.seller_id
-        @deal.update(seller_marked_done: true)
-        flash[:notice] = "Seller confirmed!"
-    elsif current_user.buyer&.id == @deal.conversation.buyer_id
-        @deal.update(buyer_marked_done: true)
-        flash[:notice] = "Buyer confirmed!"
-    else
-        flash[:alert] = "You are not authorized to confirm this deal."
+        if current_user.seller&.id == @deal.conversation.seller_id
+            @deal.update(seller_marked_done: true)
+            flash[:notice] = "Seller confirmed!"
+        elsif current_user.buyer&.id == @deal.conversation.buyer_id
+            @deal.update(buyer_marked_done: true)
+            flash[:notice] = "Buyer confirmed!"
+        else
+            flash[:alert] = "You are not authorized to confirm this deal."
     end
 
     redirect_to deals_path

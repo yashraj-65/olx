@@ -95,7 +95,7 @@ RSpec.describe "Users", type: :request do
         end
     end
 
-     describe "deleting a user" do
+     describe "Deleting  user" do
         let(:user_to_delete) { create(:user) }
         context "authorized to delete" do
             let(:admin) {create(:admin_user)}
@@ -123,7 +123,7 @@ RSpec.describe "Users", type: :request do
             end
         end
         context "not authoirzed to edit" do
-            it "cant update user" do
+            it "can't update user" do
                   delete api_v1_user_path(user_to_delete), headers: headers
                   expect(response).to have_http_status(:forbidden)
             end

@@ -21,7 +21,6 @@ RSpec.describe Items::UpdateService do
     end
 
     context "when update fails" do
-      # Assuming your Item model validates presence of title
       let(:item_params) { { title: "" } }
 
       it "returns success false and include errors" do
@@ -43,7 +42,6 @@ RSpec.describe Items::UpdateService do
       let(:item_params) { { title: "Hacker Title" } }
 
       it "raises an ActiveRecord::RecordNotFound error" do
-        # This tests that the service correctly scopes finding to the user's items
         expect { service.call }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end

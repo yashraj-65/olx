@@ -1,5 +1,5 @@
 ActiveAdmin.register Item do
-  permit_params :title, :desc, :status, :warranty, :color, :price, 
+  permit_params :title, :desc, :status, :warranty, :color, :price, :latitude,:longitude,
                 :condition, :is_negotiable, :seller_id, :image, category_ids: []
 
  batch_action :make_avail do |ids|
@@ -60,7 +60,7 @@ filter :seller_id_eq, as: :string, label: "Seller ID"
   form do |f|
     f.semantic_errors
     f.inputs "Item Details" do
-      f.input :seller, collection: Seller.all.map { |s| [s.userable.name, s.id] }
+      f.input :seller, collection: Seller.all.map { |s| [s.userable&.name || "Unknown Seller", s.id] }
       f.input :title
       f.input :desc
       f.input :categories, as: :check_boxes
@@ -73,6 +73,12 @@ filter :seller_id_eq, as: :string, label: "Seller ID"
       f.input :color
       f.input :warranty
       f.input :is_negotiable
+    end
+
+    f.inputs "Location" do
+      f.input :address, input_html: { placeholder: "Enter complete address" }
+      f.input :latitude, input_html: { step: 0.000001 }
+      f.input :longitude, input_html: { step: 0.000001 }
     end
 
     f.inputs "Media" do

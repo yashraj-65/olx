@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
     def index
       result = Items::IndexService.new(params).call
       @items = result[:items]
+      @map_data = result[:map_data]
     end
 
     def new
@@ -27,15 +28,15 @@ class ItemsController < ApplicationController
         end
     end
 
-    def destroy
-        result = Items::DestroyService.new(current_user, params[:id]).call
-        
-        if result[:success]
-            redirect_to items_path, notice: "Item was successfully deleted."
-        else
-            redirect_to items_path, alert: "Failed to delete item."
+        def destroy
+            result = Items::DestroyService.new(current_user, params[:id]).call
+            
+            if result[:success]
+                redirect_to items_path, notice: "Item was successfully deleted."
+            else
+                redirect_to items_path, alert: "Failed to delete item."
+            end
         end
-    end
 
     def edit
         seller = current_user.seller || current_user.create_seller
@@ -58,7 +59,7 @@ class ItemsController < ApplicationController
     private
 
     def item_params
-        params.require(:item).permit(:title, :desc, :status, :warranty, :color, :price, :condition, :is_negotiable, :image, category_ids: [])
+        params.require(:item).permit(:title, :desc, :status, :warranty, :color, :price, :condition, :is_negotiable, :image, :address, :latitude, :longitude, category_ids: [])
     end
 
     def ensure_owner

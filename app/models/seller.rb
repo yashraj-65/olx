@@ -4,7 +4,7 @@ class Seller < ApplicationRecord
     has_many :reviews
     has_many :items
     has_many :conversations
-  validates :avg_rating, numericality: { 
+    validates :avg_rating, numericality: { 
       greater_than_or_equal_to: 0, 
       less_than_or_equal_to: 5,
       message: "must be a number between 0 and 5" 

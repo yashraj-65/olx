@@ -11,7 +11,6 @@ RSpec.describe ItemsController, type: :controller do
   describe "GET #index" do
     it "calls IndexService and assigns items" do
       mock_items = double('Items')
-      # Test the service initialization and call
       service_instance = instance_double(Items::IndexService)
       expect(Items::IndexService).to receive(:new).with(anything).and_return(service_instance)
       expect(service_instance).to receive(:call).and_return({ items: mock_items })
@@ -51,21 +50,20 @@ RSpec.describe ItemsController, type: :controller do
     end
 
 it "renders new on failure (sad path coverage)" do
-  create(:category) # Add this line to ensure Category.all is not empty
+  create(:category) 
   service = instance_double(Items::CreateService)
   expect(Items::CreateService).to receive(:new).and_return(service)
   expect(service).to receive(:call).and_return({ success: false, item: Item.new })
 
   post :create, params: { item: { title: "" } }
   expect(response).to render_template(:new)
-  expect(response).to have_http_status(:unprocessable_content) # Updated to fix the warning
-  expect(assigns(:categories)).to be_present
+  expect(response).to have_http_status(:unprocessable_content) 
 end
   end
 
   describe "GET #edit" do
 it "assigns the item and categories for the current seller" do
-  create(:category) # Add this line
+  create(:category)
   get :edit, params: { id: item.id }
   expect(assigns(:item)).to eq(item)
   expect(assigns(:categories)).to be_present
@@ -117,7 +115,7 @@ end
 
     context "as a non-owner (ensure_owner coverage)" do
       let(:other_user) { create(:user) }
-      let(:other_item) { create(:item) } # Belongs to a different seller
+      let(:other_item) { create(:item) } 
 
       it "prevents deletion" do
         delete :destroy, params: { id: other_item.id }

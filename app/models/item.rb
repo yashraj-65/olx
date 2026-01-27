@@ -10,7 +10,10 @@ class Item < ApplicationRecord
     validates :title, presence: true
     validates :price, presence: true, numericality: {greater_than: 0}
     validates :desc, presence: true, length: { minimum: 11 }
+    validates :address, presence: true, allow_nil: true
+    validates :latitude, :longitude, numericality: true, allow_nil: true
     before_create :set_default_status
+    before_save :geocode_address, if: :address_changed?
 
     scope :filter_by_category, -> (cat_id) {
       query = where.not(items: { status: :sold })
@@ -26,19 +29,57 @@ class Item < ApplicationRecord
         where('items.title ILIKE :q OR items.desc ILIKE :q', q: search_term) 
       end
     }
-    private
-
-    def set_default_status
-        self.status||= :available
-    end
 
     def self.ransackable_attributes(auth_object = nil)      
-      ["id", "title", "price", "status", "condition", "desc", "warranty", "color", "created_at"]
+      ["id", "title", "price", "status", "condition", "desc", "warranty", "color", "created_at","latitude","longitude", "address"]
     end
     
     def self.ransackable_associations(auth_object = nil)
       ["seller", "deals","categories"]
     end
 
+    def map_data
+      {
+        item_id: id,
+        latitude: latitude,
+        longitude: longitude,
+        title: title,
+        price: price,
+        address: address
+      }
+    end
 
+    private
+
+    def set_default_status
+        self.status||= :available
+    end
+
+    def geocode_address
+      return if address.blank?
+      
+      # Only attempt geocoding if coordinates are not already provided
+      return if latitude.present? && longitude.present?
+      
+      begin
+        Rails.logger.info "Attempting to geocode address: #{address}"
+        
+        # Use Geocoder with error handling
+        results = Geocoder.search(address)
+        
+        if results.present?
+          result = results.first
+          self.latitude = result.latitude
+          self.longitude = result.longitude
+          Rails.logger.info "Successfully geocoded: #{address} -> #{latitude}, #{longitude}"
+        else
+          Rails.logger.warn "No geocoding results found for: #{address}"
+        end
+      rescue Timeout::Error
+        Rails.logger.warn "Geocoding timeout for address: #{address}"
+      rescue StandardError => e
+        Rails.logger.error "Geocoding error for '#{address}': #{e.class} - #{e.message}"
+        # Allow item to be saved even if geocoding fails
+      end
+    end
 end

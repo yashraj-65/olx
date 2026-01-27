@@ -1,40 +1,52 @@
 <style>
-/* Final Brutalist Pagy Fix */
+/* Final Brutalist Pagy Fix - Horizontal Force */
 .pagination-wrapper {
   margin-top: 50px;
   display: flex;
   justify-content: center;
+  width: 100%; /* Ensure it spans the full width of the main content */
 }
 
-/* Force the container to be a solid block */
 .pagy-nav {
   display: flex !important;
+  flex-direction: row !important; /* Force horizontal */
+  flex-wrap: nowrap !important;   /* Prevent wrapping to a new line */
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;    /* Remove bullets if it's a <ul> */
   border: 4px solid #1a1a1a !important;
-  background: #1a1a1a; /* Black gap lines */
-  gap: 4px; /* Creates the "inner border" effect */
-  padding: 0;
+  background: #1a1a1a; 
+  gap: 4px; 
+}
+.pagy-nav, 
+.pagy-nav ul, 
+.pagy-nav li, 
+.pagy-nav span, 
+.pagy-nav a {
+  display: inline-flex !important; 
+  flex-direction: row !important;
 }
 
 /* Target every child: links, current page, and disabled arrows */
 .pagy-nav a, 
 .pagy-nav span {
-  display: flex !important;
+  width: 50px !important; /* Fixed width prevents vertical stretching */
+  height: 50px !important;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  background: #fff; /* White boxes */
+  background: #fff;
   color: #1a1a1a;
-  text-decoration: none;
   font-family: 'Space Mono', monospace;
   font-weight: 900;
-  font-size: 1rem;
-  transition: 0.1s;
+  text-decoration: none;
 }
 
 /* The Active Page - Brutal Yellow */
-.pagy-nav .current {
-  background: #ffde03 !important; /* Your yellow */
+.pagy-nav .current,
+.pagy-nav b {
+  background: #ffde03 !important; 
   color: #1a1a1a !important;
 }
 
@@ -42,18 +54,6 @@
 .pagy-nav a:hover {
   background: #1a1a1a !important;
   color: #fff !important;
-}
-
-/* Disabled Arrows (Prev/Next when not available) */
-.pagy-nav .disabled {
-  background: #eee !important;
-  color: #bbb !important;
-  cursor: not-allowed;
-}
-
-/* Ensure arrows look consistent */
-.pagy-nav .prev a, .pagy-nav .next a {
-  font-size: 1.2rem;
 }
 
 .profile-layout {
@@ -291,7 +291,7 @@
             <%= "checked" if params[:bought_page].present? %>>
 
     <nav class="industrial-nav">
-      <label for="tab-reviews" class="nav-item">Feedback (<%= @seller.reviews.count %>)</label>
+      <label for="tab-reviews" class="nav-item">Feedback (<%= @user.seller.reviews.count %>)</label>
       <label for="tab-active" class="nav-item">Live Listings (<%= @active_listings.count %>)</label>
       <% if @user == current_user %>
         <label for="tab-sold" class="nav-item">Sold(<%= @user.seller.items.where(status: :sold).size %>)</label>
@@ -342,8 +342,11 @@
         <%# Keep this OUTSIDE the grid div for better centering %>
         <% if @pagy_sold && @pagy_sold.pages > 1 %>
           <div class="pagination-wrapper">
-            <%== pagy_nav(@pagy_sold) %>
-          </div>
+            <nav class="pagy-nav">
+              <%# This will render the blocks defined by the CSS above %>
+              <%== pagy_nav(@pagy_sold) %>
+            </nav>
+         </div>
         <% end %>
       </section>
 
@@ -356,10 +359,13 @@
             <p class="no-items-msg">No purchase history.</p>
           <% end %>
         </div>
-                <% if @pagy_sold && @pagy_sold.pages > 1 %>
+        <% if @pagy_bought && @pagy_bought.pages > 1 %>
           <div class="pagination-wrapper">
-            <%== pagy_nav(@pagy_sold) %>
-          </div>
+            <nav class="pagy-nav">
+              <%# This will render the blocks defined by the CSS above %>
+              <%== pagy_nav(@pagy_bought) %>
+            </nav>
+         </div>
         <% end %>
       </section>
     </div>

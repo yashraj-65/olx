@@ -1,5 +1,5 @@
 <%# app/views/items/_form.html.erb %>
-<div style="max-width: 500px; margin: 2rem auto; font-family: sans-serif; color: #333;">
+<div style="max-width: 500px; margin: 2rem auto; font-family: sans-serif; color: #333;" data-controller="location" data-location-address-target="address" data-location-latitude-target="latitude" data-location-longitude-target="longitude" data-location-button-target="locBtn">
   
   <%# Dynamic heading: "New Item" or "Edit Item" %>
   <h1 style="text-align: center; font-size: 1.5rem; margin-bottom: 1.5rem;">
@@ -16,6 +16,26 @@
     <div style="margin-bottom: 1rem;">
       <%= f.label :desc, "Description", style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
       <%= f.text_area :desc, rows: 3, style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+      <%= f.label :address, "Location / Address", style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+      <div style="display: flex; gap: 8px;">
+        <%= f.text_field :address, placeholder: "Enter complete address (city, street, zip code)", style: "flex: 1; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;" %>
+        <button type="button" style="padding: 8px 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; white-space: nowrap;" data-location-button-target="locBtn">📍 Use My Location</button>
+      </div>
+      <small style="display: block; margin-top: 4px; color: #666;">e.g., 123 Main Street, New York, NY 10001</small>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
+      <div style="flex: 1;">
+        <%= f.label :latitude, "Latitude (optional)", style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+        <%= f.number_field :latitude, step: 0.000001, placeholder: "Auto-filled from address", style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;", data: { "location-target": "latitude" } %>
+      </div>
+      <div style="flex: 1;">
+        <%= f.label :longitude, "Longitude (optional)", style: "display: block; font-weight: bold; margin-bottom: 4px;" %>
+        <%= f.number_field :longitude, step: 0.000001, placeholder: "Auto-filled from address", style: "width: 100%; padding: 8px; border: 2px solid black; border-radius: 8px; box-sizing: border-box;", data: { "location-target": "longitude" } %>
+      </div>
     </div>
 
     <div style="display: flex; gap: 10px; margin-bottom: 1rem;">

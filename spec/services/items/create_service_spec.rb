@@ -3,7 +3,6 @@ require 'rails_helper'
 
 RSpec.describe Items::CreateService do
   let(:user) { create(:user) }
-  # Ensure the user has a seller profile for the successful path
   let(:seller) { user.seller || create(:seller, userable: user) }
   
   describe "#call" do
@@ -28,7 +27,6 @@ RSpec.describe Items::CreateService do
     end
 
     context "with invalid parameters" do
-      # Assuming title is required in your Item model
       let(:item_params) { { title: "", price: 100 } }
       subject(:service) { described_class.new(user, item_params) }
 

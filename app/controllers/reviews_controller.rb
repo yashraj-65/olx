@@ -4,7 +4,6 @@ class ReviewsController < ApplicationController
         @deal=Deal.find(params[:deal_id])
         @seller=@deal.item.seller
         
-
         @review = @deal.reviews.build(review_params)
         @review.reviewer=current_user.buyer
         @review.seller=@seller

@@ -5,7 +5,7 @@ RSpec.describe Items::IndexService do
   let!(:item_in_category) { create(:item, categories: [category], title: "Blue Widget") }
   let!(:other_item) { create(:item, title: "Red Gadget") }
 
-  describe "#call" do
+  describe "call" do
     context "when filtering by category" do
       let(:params) { { category: category.id } }
       subject(:service) { described_class.new(params) }
@@ -33,7 +33,6 @@ RSpec.describe Items::IndexService do
       end
 
       it "sets pagination to 4 items per page for searches" do
-        # Create 5 matching items to test per_page limit
         create_list(:item, 5, title: "Widget")
         result = service.call
         expect(result[:items].limit_value).to eq(4)
@@ -56,7 +55,6 @@ RSpec.describe Items::IndexService do
 
       it "includes attached images and seller associations" do
         result = service.call
-        # Use the hash structure shown in your error message
         expect(result[:items].includes_values).to include(seller: :userable)
       end
     end

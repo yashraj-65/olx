@@ -24,7 +24,7 @@ module Api
                 end
             end
 
-            def create
+        def create
             @review = Review.new(review_params)
             @review.reviewer_id = current_user.buyer.id
 
@@ -32,7 +32,7 @@ module Api
             render json: @review.as_json(include: [:deal, :seller]), status: :created
             else
             render json: { errors: @review.errors.full_messages }, status: :unprocessable_entity
-            end
+        end
         end
 
         def deleted

@@ -1,11 +1,118 @@
-<div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-  <% @items.each do |item| %>
-    <div class="item">
-      <%= render partial: "item", locals: { item: item } %>
+<style>
+  
+  #items-map {
+    width: 100%;
+    height: 500px !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+  /* If the tiles are scrambled, this ensures the CSS loaded */
+  .mapboxgl-canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+</style>
+<%# Map container with responsive design %>
+<div style="margin-bottom: 30px;">
+  <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <h2 style="margin-top: 0; margin-bottom: 10px; font-size: 1.3rem;">📍 Items Near You</h2>
+    <p style="color: #666; margin: 0; font-size: 0.9rem;">Map shows all listed items in your area</p>
+  </div>
+  
+  <% if @map_data.present? && @map_data.any? %>
+    <div id="items-map" style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #f0f0f0;"></div>
+    <script>
+  function initializeMap() {
+    const mapContainer = document.getElementById('items-map');
+    
+    // 1. Safety Checks
+    if (!mapContainer || mapContainer.dataset.initialized) return;
+
+    // 2. Wait for Mapbox library if it's not quite ready yet
+    if (typeof mapboxgl === 'undefined') {
+      console.log("Mapbox GL not found yet, retrying in 100ms...");
+      setTimeout(initializeMap, 100);
+      return;
+    }
+
+    const itemsData = <%= @map_data.to_json.html_safe %>;
+    if (!itemsData || itemsData.length === 0) return;
+
+    try {
+      mapboxgl.accessToken = '<%= ENV['MAPBOX_ACCESS_TOKEN'] %>';
+      
+      const map = new mapboxgl.Map({
+        container: 'items-map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [parseFloat(itemsData[0].longitude), parseFloat(itemsData[0].latitude)],
+        zoom: 12,
+        trackResize: true
+      });
+
+      // IMPORTANT: Force the map to fill the container once it's created
+      map.on('load', () => {
+        map.resize(); 
+        console.log("Map successfully rendered and resized.");
+
+        itemsData.forEach((item) => {
+          if (!item.latitude || !item.longitude) return;
+
+          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+            `<div style="font-weight: bold;">${item.title}</div>
+             <div>Price: $${parseFloat(item.price).toFixed(2)}</div>`
+          );
+
+          new mapboxgl.Marker({ color: '#1a73e8' })
+            .setLngLat([parseFloat(item.longitude), parseFloat(item.latitude)])
+            .setPopup(popup)
+            .addTo(map);
+        });
+      });
+
+      mapContainer.dataset.initialized = "true";
+
+    } catch (error) {
+      console.error('Mapbox Initialization Error:', error);
+    }
+  }
+
+  // Listen for Turbo and standard load
+  document.addEventListener('turbo:load', initializeMap);
+  
+  // Extra safety: run on standard load if Turbo doesn't fire
+  window.addEventListener('load', initializeMap);
+</script>
+  <% else %>
+    <div style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
+      <div style="text-align: center;">
+        <p style="color: #999; text-align: center; margin: 0;">📍 No items with locations yet</p>
+        <p style="color: #ccc; font-size: 0.9rem; margin-top: 8px;">Start listing items with addresses to see them on the map</p>
+      </div>
     </div>
   <% end %>
 </div>
 
+<%# Items grid %>
+<div style="margin-bottom: 20px;">
+  <h2 style="font-size: 1.3rem; margin-top: 0; margin-bottom: 20px;">📦 Available Items</h2>
+  
+  <% if @items.any? %>
+    <div class="items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+      <% @items.each do |item| %>
+        <div class="item">
+          <%= render partial: "item", locals: { item: item } %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div style="text-align: center; padding: 40px 20px; background: #f9f9f9; border-radius: 8px;">
+      <p style="color: #999; font-size: 1.1rem; margin: 0;">No items found</p>
+    </div>
+  <% end %>
+</div>
+
+<%# Pagination %>
 <div class="pagination-container">
   <div class="page-entries-info">
     <%= page_entries_info @items %>

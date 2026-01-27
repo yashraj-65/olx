@@ -119,6 +119,13 @@
   <div class="card-body">
     <div class="price-tag"><%= number_to_currency(item.price, precision: 0) %></div>
     <div class="hero-title"><%= item.title %></div>
+    
+    <% if item.address.present? %>
+      <div style="font-size: 0.75rem; color: #666; margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+        <span>📍</span>
+        <span><%= truncate(item.address, length: 30) %></span>
+      </div>
+    <% end %>
 
     <div class="button-row">
       <div class="btn-view-wrap" style="flex: 3;">

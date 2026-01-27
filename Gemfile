@@ -78,3 +78,6 @@ gem 'simplecov', require: false, group: :test
 gem "rails-controller-testing"
 gem 'paranoia', '~> 3.0'
 gem 'pagy', '~> 9.0'
+gem "mapkick-rb"
+gem 'geocoder'
+gem 'dotenv-rails', groups: [:development, :test]

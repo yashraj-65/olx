@@ -4,9 +4,9 @@ RSpec.describe "Api::V1::Conversations", type: :request do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   
-  let(:my_seller_profile) { create(:seller, userable: user) }
-  let(:my_buyer_profile) { create(:buyer, userable: user) }
-  let(:other_buyer_profile) { create(:buyer, userable: other_user) }
+  let(:my_seller_profile) { user.seller }
+  let(:my_buyer_profile) { user.buyer }
+  let(:other_buyer_profile) {  other_user.buyer }
 
   let!(:conv_as_seller) { create(:conversation, seller_profile: my_seller_profile, buyer_profile: other_buyer_profile) }
   let!(:conv_as_buyer) { create(:conversation, buyer_profile: my_buyer_profile) }

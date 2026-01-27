@@ -4,9 +4,10 @@ module Api
     class BaseController < ActionController::API
       include Pagy::Backend
       before_action :doorkeeper_authorize!
+            rescue_from StandardError, with: :render_500
       rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  
+      
 
       private
 
@@ -23,11 +24,19 @@ module Api
           end
         end
 
-        def record_not_found(exception)
+      def record_not_found(exception)
         render json: { 
           error: "Resource not found", 
           message: exception.message 
         }, status: :not_found
+      end
+      def render_500(exception)
+ 
+
+          render json: { 
+            error: "Internal Server Error", 
+            message: "An unexpected error occurred on our servers." 
+          }, status: :internal_server_error
       end
       
     end

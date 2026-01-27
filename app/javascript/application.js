@@ -1,7 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
-
+import "mapkick/bundle"
   const themeBtn = document.getElementById('theme-btn');
   const themeIcon = document.getElementById('theme-icon');
   const currentTheme = localStorage.getItem('theme');

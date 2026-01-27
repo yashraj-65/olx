@@ -65,7 +65,7 @@ end
     ).token 
   end
 
-  it "identifies current_user as an AdminUser when resource_owner_type is present" do
+  it "identifies current_user as an AdminUser" do
     get '/stub', headers: { "Authorization" => "Bearer #{admin_token}" }
     
     expect(response).to have_http_status(:ok)
