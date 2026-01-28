@@ -41,10 +41,10 @@ class Item < ApplicationRecord
     def map_data
       {
         item_id: id,
-        latitude: latitude,
-        longitude: longitude,
+        latitude: latitude.to_f,
+        longitude: longitude.to_f,
         title: title,
-        price: price,
+        price: price.to_f,
         address: address
       }
     end
@@ -58,13 +58,11 @@ class Item < ApplicationRecord
     def geocode_address
       return if address.blank?
       
-      # Only attempt geocoding if coordinates are not already provided
       return if latitude.present? && longitude.present?
       
       begin
         Rails.logger.info "Attempting to geocode address: #{address}"
         
-        # Use Geocoder with error handling
         results = Geocoder.search(address)
         
         if results.present?
@@ -79,7 +77,7 @@ class Item < ApplicationRecord
         Rails.logger.warn "Geocoding timeout for address: #{address}"
       rescue StandardError => e
         Rails.logger.error "Geocoding error for '#{address}': #{e.class} - #{e.message}"
-        # Allow item to be saved even if geocoding fails
+        
       end
     end
 end

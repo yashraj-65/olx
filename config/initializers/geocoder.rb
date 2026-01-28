@@ -1,20 +1,17 @@
+# config/initializers/geocoder.rb
 Geocoder.configure(
-  # Use OpenCage Geocoder for reliable geocoding
-  # Falls back to Nominatim if needed
-  lookup: :nominatim,
-  
-  # Timeout for geocoding requests (in seconds)
-  timeout: 15,
-  
-  # Units for distance calculations
-  units: :km,
-  
-  # User agent required by Nominatim
-  user_agent: 'olx_marketplace_app',
-  
-  # Retry on failure
-  always_raise: :all
+  # Street address geocoding service
+  lookup: :mapbox,
+
+  # Use your existing Mapbox token from your .env or credentials
+  api_key: ENV['MAPBOX_ACCESS_TOKEN'],
+
+  # Use HTTPS
+  use_https: true,
+
+  # Standard timeout
+  timeout: 5,
+
+  # Units to use for distance
+  units: :km
 )
-
-
-

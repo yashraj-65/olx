@@ -20,69 +20,74 @@
     <p style="color: #666; margin: 0; font-size: 0.9rem;">Map shows all listed items in your area</p>
   </div>
   
-  <% if @map_data.present? && @map_data.any? %>
-    <div id="items-map" style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #f0f0f0;"></div>
-    <script>
-  function initializeMap() {
-    const mapContainer = document.getElementById('items-map');
-    
-    // 1. Safety Checks
-    if (!mapContainer || mapContainer.dataset.initialized) return;
-
-    // 2. Wait for Mapbox library if it's not quite ready yet
-    if (typeof mapboxgl === 'undefined') {
-      console.log("Mapbox GL not found yet, retrying in 100ms...");
-      setTimeout(initializeMap, 100);
-      return;
-    }
-
-    const itemsData = <%= @map_data.to_json.html_safe %>;
-    if (!itemsData || itemsData.length === 0) return;
-
-    try {
-      mapboxgl.accessToken = '<%= ENV['MAPBOX_ACCESS_TOKEN'] %>';
+    <% if @map_data.present? && @map_data.any? %>
+      <div id="items-map" style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #f0f0f0;"></div>
+      <script>
+    function initializeMap() {
+      const mapContainer = document.getElementById('items-map');
       
-      const map = new mapboxgl.Map({
-        container: 'items-map',
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [parseFloat(itemsData[0].longitude), parseFloat(itemsData[0].latitude)],
-        zoom: 12,
-        trackResize: true
-      });
+      if (!mapContainer || mapContainer.dataset.initialized) return;
 
-      // IMPORTANT: Force the map to fill the container once it's created
-      map.on('load', () => {
-        map.resize(); 
-        console.log("Map successfully rendered and resized.");
+      if (typeof mapboxgl === 'undefined') {
+        console.log("Mapbox GL not found yet, retrying in 100ms...");
+        setTimeout(initializeMap, 100);
+        return;
+      }
 
-        itemsData.forEach((item) => {
-          if (!item.latitude || !item.longitude) return;
+     window.itemsData = <%= @map_data.to_json.html_safe %>;
+console.log("Map data loaded:", window.itemsData);
+      if (!itemsData || itemsData.length === 0) return;
 
-          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-            `<div style="font-weight: bold;">${item.title}</div>
-             <div>Price: $${parseFloat(item.price).toFixed(2)}</div>`
-          );
-
-          new mapboxgl.Marker({ color: '#1a73e8' })
-            .setLngLat([parseFloat(item.longitude), parseFloat(item.latitude)])
-            .setPopup(popup)
-            .addTo(map);
+      try {
+        mapboxgl.accessToken = '<%= ENV['MAPBOX_ACCESS_TOKEN'] %>';
+        
+        const map = new mapboxgl.Map({
+          container: 'items-map',
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [parseFloat(itemsData[0].longitude), parseFloat(itemsData[0].latitude)],
+          zoom: 12,
+          trackResize: true
         });
-      });
+map.on('load', () => {
+  const bounds = new mapboxgl.LngLatBounds();
+  let hasMarkers = false;
 
-      mapContainer.dataset.initialized = "true";
+  itemsData.forEach((item) => {
+    if (!item.latitude || !item.longitude) return;
 
-    } catch (error) {
-      console.error('Mapbox Initialization Error:', error);
-    }
+    const lng = parseFloat(item.longitude);
+    const lat = parseFloat(item.latitude);
+
+    // Skip invalid coordinates
+    if (isNaN(lng) || isNaN(lat)) return;
+
+    const coords = [lng, lat];
+    bounds.extend(coords); // Grow the map "box" to include this pin
+    hasMarkers = true;
+
+    new mapboxgl.Marker({ color: '#1a73e8' })
+      .setLngLat(coords)
+      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<b>${item.title}</b>`))
+      .addTo(map);
+  });
+
+  // Only zoom if we actually found markers
+  if (hasMarkers) {
+    map.fitBounds(bounds, { padding: 50, maxZoom: 15 });
   }
+});
 
-  // Listen for Turbo and standard load
-  document.addEventListener('turbo:load', initializeMap);
-  
-  // Extra safety: run on standard load if Turbo doesn't fire
-  window.addEventListener('load', initializeMap);
-</script>
+        mapContainer.dataset.initialized = "true";
+
+      } catch (error) {
+        console.error('Mapbox Initialization Error:', error);
+      }
+    }
+
+    document.addEventListener('turbo:load', initializeMap);
+    
+    window.addEventListener('load', initializeMap);
+  </script>
   <% else %>
     <div style="width: 100%; height: 500px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; background: #f0f0f0;">
       <div style="text-align: center;">
